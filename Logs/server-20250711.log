@@ -1,0 +1,106 @@
+[2025-07-11 11:34:57 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 134.0893 ms] [PID => 54647] 
+[2025-07-11 11:34:57 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 9.3083 ms] [PID => 54647] 
+[2025-07-11 11:35:21 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/Plugins responded 200 in 69.6019 ms] [PID => 54647] 
+[2025-07-11 11:35:21 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/Plugins responded 200 in 6.1310 ms] [PID => 54647] 
+[2025-07-11 11:35:40 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/Plugins responded 200 in 18.0192 ms] [PID => 54647] 
+[2025-07-11 11:35:40 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/Plugins responded 200 in 4.2970 ms] [PID => 54647] 
+[2025-07-11 11:35:40 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 41.6792 ms] [PID => 54647] 
+[2025-07-11 11:35:40 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 5.0978 ms] [PID => 54647] 
+[2025-07-11 12:34:14 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 150.2121 ms] [PID => 54647] 
+[2025-07-11 12:34:14 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 3.9655 ms] [PID => 54647] 
+[2025-07-11 12:34:18 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 43.6170 ms] [PID => 54647] 
+[2025-07-11 12:34:18 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 7.4441 ms] [PID => 54647] 
+[2025-07-11 12:34:18 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 81.9129 ms] [PID => 54647] 
+[2025-07-11 12:34:18 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 54.5536 ms] [PID => 54647] 
+[2025-07-11 12:34:45 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 22.1973 ms] [PID => 54647] 
+[2025-07-11 12:34:45 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 10.0192 ms] [PID => 54647] 
+[2025-07-11 12:34:48 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/d08c9612-6bdd-4f39-9c70-15216cb08fc1 responded 200 in 11.9063 ms] [PID => 54647] 
+[2025-07-11 12:34:48 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/d08c9612-6bdd-4f39-9c70-15216cb08fc1 responded 200 in 6.1903 ms] [PID => 54647] 
+[2025-07-11 12:34:48 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/d08c9612-6bdd-4f39-9c70-15216cb08fc1 responded 200 in 53.1195 ms] [PID => 54647] 
+[2025-07-11 12:34:48 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/d08c9612-6bdd-4f39-9c70-15216cb08fc1 responded 200 in 20.3133 ms] [PID => 54647] 
+[2025-07-11 12:35:09 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 13.4332 ms] [PID => 54647] 
+[2025-07-11 12:35:09 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 11.0492 ms] [PID => 54647] 
+[2025-07-11 12:35:12 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/13f773bb-fc38-4cea-a377-fb571570ceda responded 200 in 28.2916 ms] [PID => 54647] 
+[2025-07-11 12:35:12 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/13f773bb-fc38-4cea-a377-fb571570ceda responded 200 in 5.6010 ms] [PID => 54647] 
+[2025-07-11 12:35:12 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/13f773bb-fc38-4cea-a377-fb571570ceda responded 200 in 42.3886 ms] [PID => 54647] 
+[2025-07-11 12:35:12 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/13f773bb-fc38-4cea-a377-fb571570ceda responded 200 in 13.1343 ms] [PID => 54647] 
+[2025-07-11 12:35:30 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 21.1731 ms] [PID => 54647] 
+[2025-07-11 12:35:30 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 17.1715 ms] [PID => 54647] 
+[2025-07-11 12:35:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/2846c21a-9c39-4387-8a72-1fdd9b8992c1 responded 200 in 10.3427 ms] [PID => 54647] 
+[2025-07-11 12:35:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/2846c21a-9c39-4387-8a72-1fdd9b8992c1 responded 200 in 8.2519 ms] [PID => 54647] 
+[2025-07-11 12:35:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/2846c21a-9c39-4387-8a72-1fdd9b8992c1 responded 200 in 26.2188 ms] [PID => 54647] 
+[2025-07-11 12:35:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/2846c21a-9c39-4387-8a72-1fdd9b8992c1 responded 200 in 6.2782 ms] [PID => 54647] 
+[2025-07-11 12:35:43 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 12.6007 ms] [PID => 54647] 
+[2025-07-11 12:35:43 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 10.0339 ms] [PID => 54647] 
+[2025-07-11 12:35:49 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/966803b1-921c-41e5-8683-603b87619736 responded 200 in 7.4958 ms] [PID => 54647] 
+[2025-07-11 12:35:49 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/966803b1-921c-41e5-8683-603b87619736 responded 200 in 5.1437 ms] [PID => 54647] 
+[2025-07-11 12:35:49 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/966803b1-921c-41e5-8683-603b87619736 responded 200 in 16.4237 ms] [PID => 54647] 
+[2025-07-11 12:35:49 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/966803b1-921c-41e5-8683-603b87619736 responded 200 in 7.4078 ms] [PID => 54647] 
+[2025-07-11 12:37:21 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 39.3482 ms] [PID => 54647] 
+[2025-07-11 12:37:21 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 5.6145 ms] [PID => 54647] 
+[2025-07-11 13:09:19 ERR] [Microsoft.EntityFrameworkCore.Query File => (:)] [Message => An exception occurred while iterating over the results of a query for context type 'MS.API.Mini.Data.MonitorDBContext'.
+System.ArgumentException: Requested value 'Active System' was not found.
+   at System.Enum.TryParseByName[TStorage](RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, TStorage& result)
+   at System.Enum.TryParseByValueOrName[TUnderlying,TStorage](RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, TUnderlying& result)
+   at System.Enum.TryParse(Type enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, Object& result)
+   at lambda_method256(Closure, String)
+   at lambda_method586(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()] [PID => 54647] 
+System.ArgumentException: Requested value 'Active System' was not found.
+   at System.Enum.TryParseByName[TStorage](RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, TStorage& result)
+   at System.Enum.TryParseByValueOrName[TUnderlying,TStorage](RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, TUnderlying& result)
+   at System.Enum.TryParse(Type enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, Object& result)
+   at lambda_method256(Closure, String)
+   at lambda_method586(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+[2025-07-11 13:09:19 ERR] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 500 in 266.7629 ms] [PID => 54647] 
+System.ArgumentException: Requested value 'Active System' was not found.
+   at System.Enum.TryParseByName[TStorage](RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, TStorage& result)
+   at System.Enum.TryParseByValueOrName[TUnderlying,TStorage](RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, TUnderlying& result)
+   at System.Enum.TryParse(Type enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, Object& result)
+   at lambda_method256(Closure, String)
+   at lambda_method586(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at MS.API.Mini.Controllers.SystemMonitorController.GetSystemMonitors()
+   at lambda_method606(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[2025-07-11 13:09:19 ERR] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware File => (:)] [Message => An unhandled exception has occurred while executing the request.] [PID => 54647] 
+System.ArgumentException: Requested value 'Active System' was not found.
+   at System.Enum.TryParseByName[TStorage](RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, TStorage& result)
+   at System.Enum.TryParseByValueOrName[TUnderlying,TStorage](RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, TUnderlying& result)
+   at System.Enum.TryParse(Type enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, Object& result)
+   at lambda_method256(Closure, String)
+   at lambda_method586(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at MS.API.Mini.Controllers.SystemMonitorController.GetSystemMonitors()
+   at lambda_method606(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+[2025-07-11 13:48:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 391.5376 ms] [PID => 54647] 
+[2025-07-11 14:02:40 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 215.3121 ms] [PID => 54647] 

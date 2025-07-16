@@ -1,0 +1,54 @@
+{
+  "Serilog": {
+    "Using": [
+      "Serilog.Sinks.Console",
+      "Serilog.Sinks.File",
+      "Serilog.Enrichers.Process",
+      "Serilog.Enrichers.Environment"
+    ],
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Debug",
+        "AppLogger": "Debug"
+      }
+    },
+    "WriteTo": [
+      {
+        "Name": "Console",
+        "Args": {
+          "outputTemplate": "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] [{SourceContext} File => ({CallerFilePath}:{CallerLineNumber})] [Message => {Message:lj}] [PID => {ProcessId}] {NewLine}{Exception}"
+        }
+      },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "../Logs/server-.log",
+          "outputTemplate": "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] [{SourceContext} File => ({CallerFilePath}:{CallerLineNumber})] [Message => {Message:lj}] [PID => {ProcessId}] {NewLine}{Exception}",
+          "rollingInterval": "Day",
+          "rollOnFileSizeLimit": true,
+          "restrictedToMinimumLevel": "Information",
+          "fileSizeLimitBytes": "52428800",
+          "retainedFileCountLimit": 20
+        }
+      }
+    ],
+    "Enrich": [
+      "FromLogContext",
+      "WithMachineName",
+      "WithEnvironmentName",
+      "WithProcessId",
+      "WithThreadId",
+      "WithExceptionDetails",
+      "WithRequestId",
+      "WithCaller",
+      "WithProperty",
+      "MS.API"
+    ],
+    "Properties": {
+      "ApplicationName": "MS.API",
+      "Environment": "Development"
+    }
+  }
+}
