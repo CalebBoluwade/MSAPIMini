@@ -1,8 +1,0 @@
-[2025-07-13 14:16:51 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 264.0402 ms] [PID => 88827] 
-[2025-07-13 16:25:18 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 423.7783 ms] [PID => 88827] 
-[2025-07-13 16:25:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 33.6301 ms] [PID => 88827] 
-[2025-07-13 16:25:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 72.7376 ms] [PID => 88827] 
-[2025-07-13 16:38:40 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 90.2639 ms] [PID => 88827] 
-[2025-07-13 16:39:02 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 22.7781 ms] [PID => 88827] 
-[2025-07-13 18:22:43 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 273.9784 ms] [PID => 88827] 
-[2025-07-13 18:30:48 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor responded 200 in 133.2949 ms] [PID => 88827] 

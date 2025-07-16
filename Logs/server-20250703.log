@@ -1,8 +1,0 @@
-[2025-07-03 18:04:35 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 107.4457 ms] [PID => 50774] 
-[2025-07-03 18:04:35 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 155.6528 ms] [PID => 50774] 
-[2025-07-03 18:04:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 36.0791 ms] [PID => 50774] 
-[2025-07-03 18:04:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 40.4637 ms] [PID => 50774] 
-[2025-07-03 23:49:05 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 81.4601 ms] [PID => 50774] 
-[2025-07-03 23:49:05 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 83.7103 ms] [PID => 50774] 
-[2025-07-03 23:57:27 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 53.1855 ms] [PID => 50774] 
-[2025-07-03 23:57:27 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/systemmonitor/7a836663-e994-42e9-8a07-7883f98eb12b responded 200 in 57.5692 ms] [PID => 50774] 
