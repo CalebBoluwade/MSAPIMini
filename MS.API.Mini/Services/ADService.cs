@@ -1,8 +1,8 @@
+using System.DirectoryServices.Protocols;
+using System.Net;
 using MS.API.Mini.Data.Models;
 using Microsoft.Graph;
-using Microsoft.Graph.Auth;
 using Microsoft.Graph.Models;
-using System.Runtime.InteropServices;
 using Microsoft.Graph.Users;
 using MS.API.Mini.Data;
 
@@ -19,6 +19,39 @@ public class ActiveDirectoryService(
         ILogger<ActiveDirectoryService> logger)
     : IActiveDirectoryService
 {
+    private const string ldapHost = "vi-rodc-svr.nibss-plc.com";
+    private const string searchBase = "OU=azure sync,DC=nibss-plc,DC=com";
+    
+    public List<ActiveDirectoryUserDTO> Search(int page, int pageSize, string filter = "(&(objectCategory=person)(objectClass=user)(!(objectClass=computer)))")
+    {
+        using var connection = new LdapConnection(ldapHost);
+        connection.Credential = new NetworkCredential("admin", "Admin@12345");
+        connection.AuthType = AuthType.Negotiate;
+
+        connection.SessionOptions.ProtocolVersion = 3;
+        connection.Bind();
+        
+        var request = new System.DirectoryServices.Protocols.SearchRequest(
+            searchBase,
+            filter,
+            SearchScope.Subtree,
+            "cn", "distinguishedName", "sAMAccountName" // attributes to load
+        );
+
+        var response = (System.DirectoryServices.Protocols.SearchResponse)connection.SendRequest(request);
+
+        var pagedResults = response.Entries
+            .Cast<SearchResultEntry>()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+
+        return pagedResults.Select(entry => new ActiveDirectoryUserDTO
+        {
+            GivenName = entry.Attributes["cn"]?[0]?.ToString()!, 
+            UserPrincipalName = entry.Attributes["sAMAccountName"]?[0]?.ToString(), 
+            // DistinguishedName = entry.Attributes["distinguishedName"]?[0]?.ToString()
+        }).ToList();
+    }
     
     public async Task<PagedResult<ActiveDirectoryUserDTO>> GetActiveDirectoryUsersAsync(
         int page, int pageSize, string? searchTerm, bool includeDisabled)

@@ -1,0 +1,543 @@
+[2025-08-06 10:45:23 WRN] [Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware File => (:)] [Message => The WebRootPath was not found: /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/wwwroot. Static files may be unavailable.] [PID => 70736] 
+[2025-08-06 10:46:11 WRN] [Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware File => (:)] [Message => Failed to determine the https port for redirect.] [PID => 70736] 
+[2025-08-06 10:46:11 WRN] [Microsoft.EntityFrameworkCore.Query File => (:)] [Message => The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.] [PID => 70736] 
+[2025-08-06 10:46:11 ERR] [Microsoft.EntityFrameworkCore.Database.Command File => (:)] [Message => Failed executing DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT s."SystemMonitorId", s."Agent", s."CheckInterval", s."Configuration", s."CreatedAt", s."CurrentHealthCheck", s."Description", s."Device", s."FailureCount", s."IPAddress", s."IsAcknowledged", s."IsMonitored", s."LastCheckTime", s."LastServiceUpTime", s."Plugins", s."PollerNode", s."Port", s."RetryCount", s."ServiceName", s."SnoozeUntil", s1."ID", s1."AgentID", s1."CPUUsage", s1."MemoryUsage", s1."SystemMonitorId", s1."Timestamp", s1."TimestampMem"
+FROM "SystemMonitor" AS s
+LEFT JOIN LATERAL (
+    SELECT s0."ID", s0."AgentID", s0."CPUUsage", s0."MemoryUsage", s0."SystemMonitorId", s0."Timestamp", s0."TimestampMem"
+    FROM "SystemMetricData" AS s0
+    WHERE s."SystemMonitorId" = s0."SystemMonitorId"
+    LIMIT 5
+) AS s1 ON TRUE
+ORDER BY s."CreatedAt", s."SystemMonitorId", s1."ID" DESC] [PID => 70736] 
+[2025-08-06 10:46:11 ERR] [Microsoft.EntityFrameworkCore.Query File => (:)] [Message => An exception occurred while iterating over the results of a query for context type 'MS.API.Mini.Data.MonitorDBContext'.
+Npgsql.PostgresException (0x80004005): 42703: column s0.SystemMonitorId does not exist
+
+POSITION: 572
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s0.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 572
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn] [PID => 70736] 
+Npgsql.PostgresException (0x80004005): 42703: column s0.SystemMonitorId does not exist
+
+POSITION: 572
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s0.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 572
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 10:46:11 ERR] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemMonitor responded 500 in 222.0735 ms] [PID => 70736] 
+Npgsql.PostgresException (0x80004005): 42703: column s0.SystemMonitorId does not exist
+
+POSITION: 572
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at MS.API.Mini.Controllers.SystemMonitorController.GetSystemMonitors() in /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/Controllers/SystemMonitorController.cs:line 16
+   at lambda_method24(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s0.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 572
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 10:46:11 ERR] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware File => (:)] [Message => An unhandled exception has occurred while executing the request.] [PID => 70736] 
+Npgsql.PostgresException (0x80004005): 42703: column s0.SystemMonitorId does not exist
+
+POSITION: 572
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at MS.API.Mini.Controllers.SystemMonitorController.GetSystemMonitors() in /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/Controllers/SystemMonitorController.cs:line 16
+   at lambda_method24(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s0.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 572
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 10:50:49 WRN] [Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware File => (:)] [Message => The WebRootPath was not found: /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/wwwroot. Static files may be unavailable.] [PID => 77475] 
+[2025-08-06 20:50:01 WRN] [Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware File => (:)] [Message => The WebRootPath was not found: /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/wwwroot. Static files may be unavailable.] [PID => 40284] 
+[2025-08-06 20:51:08 WRN] [Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware File => (:)] [Message => Failed to determine the https port for redirect.] [PID => 40284] 
+[2025-08-06 20:51:09 ERR] [Microsoft.EntityFrameworkCore.Database.Command File => (:)] [Message => Failed executing DbCommand (96ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT s4."Timestamp", s4."TimestampMem", s4."CPUUsage", s4."MemoryUsage", s."SystemMonitorId"
+FROM "SystemMonitor" AS s
+INNER JOIN (
+    SELECT s3."Timestamp", s3."TimestampMem", s3."CPUUsage", s3."MemoryUsage", s3."SystemMonitorId"
+    FROM (
+        SELECT s2."Timestamp", s2."TimestampMem", s2."CPUUsage", s2."MemoryUsage", s2."SystemMonitorId", ROW_NUMBER() OVER(PARTITION BY s2."SystemMonitorId" ORDER BY s2."Timestamp" DESC) AS row
+        FROM "SystemMetricData" AS s2
+    ) AS s3
+    WHERE s3.row <= 5
+) AS s4 ON s."SystemMonitorId" = s4."SystemMonitorId"
+ORDER BY s."CreatedAt", s."SystemMonitorId", s4."SystemMonitorId", s4."Timestamp" DESC] [PID => 40284] 
+[2025-08-06 20:51:09 ERR] [Microsoft.EntityFrameworkCore.Query File => (:)] [Message => An exception occurred while iterating over the results of a query for context type 'MS.API.Mini.Data.MonitorDBContext'.
+Npgsql.PostgresException (0x80004005): 42703: column s2.SystemMonitorId does not exist
+
+POSITION: 329
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.<PopulateSplitCollectionAsync>g__InitializeReaderAsync|31_0[TCollection,TElement,TRelatedEntity](RelationalQueryContext queryContext, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.PopulateSplitCollectionAsync[TCollection,TElement,TRelatedEntity](Int32 collectionId, RelationalQueryContext queryContext, IExecutionStrategy executionStrategy, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, SplitQueryResultCoordinator resultCoordinator, Func`3 childIdentifier, IReadOnlyList`1 identifierValueComparers, Func`5 innerShaper, Func`4 relatedDataLoaders)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.TaskAwaiter(Func`1[] taskFactories)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SplitQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s2.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 329
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn] [PID => 40284] 
+Npgsql.PostgresException (0x80004005): 42703: column s2.SystemMonitorId does not exist
+
+POSITION: 329
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.<PopulateSplitCollectionAsync>g__InitializeReaderAsync|31_0[TCollection,TElement,TRelatedEntity](RelationalQueryContext queryContext, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.PopulateSplitCollectionAsync[TCollection,TElement,TRelatedEntity](Int32 collectionId, RelationalQueryContext queryContext, IExecutionStrategy executionStrategy, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, SplitQueryResultCoordinator resultCoordinator, Func`3 childIdentifier, IReadOnlyList`1 identifierValueComparers, Func`5 innerShaper, Func`4 relatedDataLoaders)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.TaskAwaiter(Func`1[] taskFactories)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SplitQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s2.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 329
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 20:51:09 ERR] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 500 in 601.9584 ms] [PID => 40284] 
+Npgsql.PostgresException (0x80004005): 42703: column s2.SystemMonitorId does not exist
+
+POSITION: 329
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.<PopulateSplitCollectionAsync>g__InitializeReaderAsync|31_0[TCollection,TElement,TRelatedEntity](RelationalQueryContext queryContext, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.PopulateSplitCollectionAsync[TCollection,TElement,TRelatedEntity](Int32 collectionId, RelationalQueryContext queryContext, IExecutionStrategy executionStrategy, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, SplitQueryResultCoordinator resultCoordinator, Func`3 childIdentifier, IReadOnlyList`1 identifierValueComparers, Func`5 innerShaper, Func`4 relatedDataLoaders)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.TaskAwaiter(Func`1[] taskFactories)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SplitQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at MS.API.Mini.Controllers.SystemMonitorController.GetSystemMonitors() in /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/Controllers/SystemMonitorController.cs:line 16
+   at lambda_method24(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s2.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 329
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 20:51:09 ERR] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware File => (:)] [Message => An unhandled exception has occurred while executing the request.] [PID => 40284] 
+Npgsql.PostgresException (0x80004005): 42703: column s2.SystemMonitorId does not exist
+
+POSITION: 329
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.<PopulateSplitCollectionAsync>g__InitializeReaderAsync|31_0[TCollection,TElement,TRelatedEntity](RelationalQueryContext queryContext, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.PopulateSplitCollectionAsync[TCollection,TElement,TRelatedEntity](Int32 collectionId, RelationalQueryContext queryContext, IExecutionStrategy executionStrategy, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, SplitQueryResultCoordinator resultCoordinator, Func`3 childIdentifier, IReadOnlyList`1 identifierValueComparers, Func`5 innerShaper, Func`4 relatedDataLoaders)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.TaskAwaiter(Func`1[] taskFactories)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SplitQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at MS.API.Mini.Controllers.SystemMonitorController.GetSystemMonitors() in /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/Controllers/SystemMonitorController.cs:line 16
+   at lambda_method24(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s2.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 329
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 20:51:42 ERR] [Microsoft.EntityFrameworkCore.Database.Command File => (:)] [Message => Failed executing DbCommand (44ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT s4."Timestamp", s4."TimestampMem", s4."CPUUsage", s4."MemoryUsage", s."SystemMonitorId"
+FROM "SystemMonitor" AS s
+INNER JOIN (
+    SELECT s3."Timestamp", s3."TimestampMem", s3."CPUUsage", s3."MemoryUsage", s3."SystemMonitorId"
+    FROM (
+        SELECT s2."Timestamp", s2."TimestampMem", s2."CPUUsage", s2."MemoryUsage", s2."SystemMonitorId", ROW_NUMBER() OVER(PARTITION BY s2."SystemMonitorId" ORDER BY s2."Timestamp" DESC) AS row
+        FROM "SystemMetricData" AS s2
+    ) AS s3
+    WHERE s3.row <= 5
+) AS s4 ON s."SystemMonitorId" = s4."SystemMonitorId"
+ORDER BY s."CreatedAt", s."SystemMonitorId", s4."SystemMonitorId", s4."Timestamp" DESC] [PID => 40284] 
+[2025-08-06 20:51:42 ERR] [Microsoft.EntityFrameworkCore.Query File => (:)] [Message => An exception occurred while iterating over the results of a query for context type 'MS.API.Mini.Data.MonitorDBContext'.
+Npgsql.PostgresException (0x80004005): 42703: column s2.SystemMonitorId does not exist
+
+POSITION: 329
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.<PopulateSplitCollectionAsync>g__InitializeReaderAsync|31_0[TCollection,TElement,TRelatedEntity](RelationalQueryContext queryContext, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.PopulateSplitCollectionAsync[TCollection,TElement,TRelatedEntity](Int32 collectionId, RelationalQueryContext queryContext, IExecutionStrategy executionStrategy, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, SplitQueryResultCoordinator resultCoordinator, Func`3 childIdentifier, IReadOnlyList`1 identifierValueComparers, Func`5 innerShaper, Func`4 relatedDataLoaders)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.TaskAwaiter(Func`1[] taskFactories)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SplitQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s2.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 329
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn] [PID => 40284] 
+Npgsql.PostgresException (0x80004005): 42703: column s2.SystemMonitorId does not exist
+
+POSITION: 329
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.<PopulateSplitCollectionAsync>g__InitializeReaderAsync|31_0[TCollection,TElement,TRelatedEntity](RelationalQueryContext queryContext, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.PopulateSplitCollectionAsync[TCollection,TElement,TRelatedEntity](Int32 collectionId, RelationalQueryContext queryContext, IExecutionStrategy executionStrategy, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, SplitQueryResultCoordinator resultCoordinator, Func`3 childIdentifier, IReadOnlyList`1 identifierValueComparers, Func`5 innerShaper, Func`4 relatedDataLoaders)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.TaskAwaiter(Func`1[] taskFactories)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SplitQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s2.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 329
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 20:51:42 ERR] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 500 in 158.5487 ms] [PID => 40284] 
+Npgsql.PostgresException (0x80004005): 42703: column s2.SystemMonitorId does not exist
+
+POSITION: 329
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.<PopulateSplitCollectionAsync>g__InitializeReaderAsync|31_0[TCollection,TElement,TRelatedEntity](RelationalQueryContext queryContext, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.PopulateSplitCollectionAsync[TCollection,TElement,TRelatedEntity](Int32 collectionId, RelationalQueryContext queryContext, IExecutionStrategy executionStrategy, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, SplitQueryResultCoordinator resultCoordinator, Func`3 childIdentifier, IReadOnlyList`1 identifierValueComparers, Func`5 innerShaper, Func`4 relatedDataLoaders)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.TaskAwaiter(Func`1[] taskFactories)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SplitQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at MS.API.Mini.Controllers.SystemMonitorController.GetSystemMonitors() in /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/Controllers/SystemMonitorController.cs:line 16
+   at lambda_method24(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s2.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 329
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 20:51:42 ERR] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware File => (:)] [Message => An unhandled exception has occurred while executing the request.] [PID => 40284] 
+Npgsql.PostgresException (0x80004005): 42703: column s2.SystemMonitorId does not exist
+
+POSITION: 329
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.<PopulateSplitCollectionAsync>g__InitializeReaderAsync|31_0[TCollection,TElement,TRelatedEntity](RelationalQueryContext queryContext, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.PopulateSplitCollectionAsync[TCollection,TElement,TRelatedEntity](Int32 collectionId, RelationalQueryContext queryContext, IExecutionStrategy executionStrategy, RelationalCommandResolver relationalCommandResolver, IReadOnlyList`1 readerColumns, Boolean detailedErrorsEnabled, SplitQueryResultCoordinator resultCoordinator, Func`3 childIdentifier, IReadOnlyList`1 identifierValueComparers, Func`5 innerShaper, Func`4 relatedDataLoaders)
+   at Microsoft.EntityFrameworkCore.Query.RelationalShapedQueryCompilingExpressionVisitor.ShaperProcessingExpressionVisitor.TaskAwaiter(Func`1[] taskFactories)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SplitQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at MS.API.Mini.Controllers.SystemMonitorController.GetSystemMonitors() in /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/Controllers/SystemMonitorController.cs:line 16
+   at lambda_method24(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column s2.SystemMonitorId does not exist
+    Hint: Perhaps you meant to reference the column "s.SystemMonitorId".
+    Position: 329
+    File: parse_relation.c
+    Line: 3657
+    Routine: errorMissingColumn
+[2025-08-06 21:01:21 ERR] [Microsoft.EntityFrameworkCore.Database.Command File => (:)] [Message => Failed executing DbCommand (64ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "SystemMetricData" ADD CONSTRAINT "FK_SystemMetricData_SystemMonitor_SystemMonitorId" FOREIGN KEY ("SystemMonitorId") REFERENCES "SystemMonitor" ("SystemMonitorId") ON DELETE CASCADE;] [PID => 58424] 
+[2025-08-06 21:05:26 WRN] [Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware File => (:)] [Message => The WebRootPath was not found: /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/wwwroot. Static files may be unavailable.] [PID => 64834] 
+[2025-08-06 21:06:33 WRN] [Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware File => (:)] [Message => Failed to determine the https port for redirect.] [PID => 64834] 
+[2025-08-06 21:06:34 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemMonitor responded 200 in 385.5956 ms] [PID => 64834] 
+[2025-08-06 21:21:55 WRN] [Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware File => (:)] [Message => The WebRootPath was not found: /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/wwwroot. Static files may be unavailable.] [PID => 91317] 
+[2025-08-06 21:22:05 WRN] [Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware File => (:)] [Message => Failed to determine the https port for redirect.] [PID => 91317] 
+[2025-08-06 21:22:05 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemMonitor responded 200 in 425.6912 ms] [PID => 91317] 
+[2025-08-06 21:22:27 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 202.6409 ms] [PID => 91317] 
+[2025-08-06 21:24:59 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 439.3100 ms] [PID => 91317] 
+[2025-08-06 21:26:08 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 149.9405 ms] [PID => 91317] 
+[2025-08-06 21:31:39 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 491.0846 ms] [PID => 91317] 
+[2025-08-06 21:31:52 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 149.1646 ms] [PID => 91317] 
+[2025-08-06 21:43:26 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/Plugins responded 200 in 558.3752 ms] [PID => 91317] 
+[2025-08-06 21:43:26 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/17283774-21d2-4e88-9de6-04131591793e responded 200 in 558.3057 ms] [PID => 91317] 
+[2025-08-06 21:44:46 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 133.6576 ms] [PID => 91317] 
+[2025-08-06 21:45:48 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 23744.2700 ms] [PID => 91317] 
+[2025-08-06 21:46:20 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 128.1948 ms] [PID => 91317] 
+[2025-08-06 21:48:56 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 414.1283 ms] [PID => 91317] 
+[2025-08-06 21:49:41 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 126.4280 ms] [PID => 91317] 
+[2025-08-06 21:51:45 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 121.2725 ms] [PID => 91317] 
+[2025-08-06 21:52:41 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 115.6232 ms] [PID => 91317] 
+[2025-08-06 21:52:47 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/17283774-21d2-4e88-9de6-04131591793e responded 200 in 82.5559 ms] [PID => 91317] 
+[2025-08-06 21:52:47 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/17283774-21d2-4e88-9de6-04131591793e responded 200 in 458.0527 ms] [PID => 91317] 
+[2025-08-06 21:52:48 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData/disks responded 200 in 96.4669 ms] [PID => 91317] 
+[2025-08-06 21:52:48 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 96.8687 ms] [PID => 91317] 
+[2025-08-06 21:55:52 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/8a67a3be-fcb7-4d11-95f2-60285e48c66e responded 200 in 123.7283 ms] [PID => 91317] 
+[2025-08-06 21:55:53 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/8a67a3be-fcb7-4d11-95f2-60285e48c66e responded 200 in 350.9830 ms] [PID => 91317] 
+[2025-08-06 21:55:53 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 46.8013 ms] [PID => 91317] 
+[2025-08-06 21:55:53 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData/disks responded 200 in 46.8013 ms] [PID => 91317] 
+[2025-08-06 21:56:00 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/1487b41b-3764-4334-904d-3f08fe0d759f responded 200 in 75.9728 ms] [PID => 91317] 
+[2025-08-06 21:56:00 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/Plugins responded 200 in 75.5667 ms] [PID => 91317] 
+[2025-08-06 22:03:02 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 381.8553 ms] [PID => 91317] 
+[2025-08-06 22:05:03 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 266.2350 ms] [PID => 91317] 
+[2025-08-06 22:06:37 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 138.3894 ms] [PID => 91317] 
+[2025-08-06 22:07:39 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 114.5314 ms] [PID => 91317] 
+[2025-08-06 22:10:12 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 432.1208 ms] [PID => 91317] 
+[2025-08-06 22:10:43 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 120.4903 ms] [PID => 91317] 
+[2025-08-06 22:13:16 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 138.7302 ms] [PID => 91317] 
+[2025-08-06 22:13:41 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 114.6047 ms] [PID => 91317] 
+[2025-08-06 22:14:07 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 172.2878 ms] [PID => 91317] 
+[2025-08-06 22:14:19 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/17283774-21d2-4e88-9de6-04131591793e responded 200 in 150.0030 ms] [PID => 91317] 
+[2025-08-06 22:14:19 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/17283774-21d2-4e88-9de6-04131591793e responded 200 in 334.1829 ms] [PID => 91317] 
+[2025-08-06 22:14:19 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 53.6881 ms] [PID => 91317] 
+[2025-08-06 22:14:19 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData/disks responded 200 in 54.3515 ms] [PID => 91317] 
+[2025-08-06 22:14:28 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/58d88c0d-60a8-4d5b-a932-809969b28f6e responded 200 in 71.4108 ms] [PID => 91317] 
+[2025-08-06 22:14:28 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/58d88c0d-60a8-4d5b-a932-809969b28f6e responded 200 in 229.7238 ms] [PID => 91317] 
+[2025-08-06 22:14:28 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 49.1662 ms] [PID => 91317] 
+[2025-08-06 22:14:28 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData/disks responded 200 in 49.0338 ms] [PID => 91317] 
+[2025-08-06 22:17:47 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/8a67a3be-fcb7-4d11-95f2-60285e48c66e responded 200 in 90.3549 ms] [PID => 91317] 
+[2025-08-06 22:17:47 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/8a67a3be-fcb7-4d11-95f2-60285e48c66e responded 200 in 383.9429 ms] [PID => 91317] 
+[2025-08-06 22:17:47 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 44.9265 ms] [PID => 91317] 
+[2025-08-06 22:17:47 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData/disks responded 200 in 45.0549 ms] [PID => 91317] 
+[2025-08-06 22:20:57 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/8a67a3be-fcb7-4d11-95f2-60285e48c66e responded 200 in 114.7043 ms] [PID => 91317] 
+[2025-08-06 22:20:57 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/8a67a3be-fcb7-4d11-95f2-60285e48c66e responded 200 in 313.1238 ms] [PID => 91317] 
+[2025-08-06 22:20:57 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 348.8218 ms] [PID => 91317] 
+[2025-08-06 22:20:57 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 58.2175 ms] [PID => 91317] 
+[2025-08-06 22:20:57 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData/disks responded 200 in 58.7862 ms] [PID => 91317] 
+[2025-08-06 22:22:59 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 164.4139 ms] [PID => 91317] 
+[2025-08-06 22:23:46 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 107.8381 ms] [PID => 91317] 
+[2025-08-06 22:26:03 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/97841db2-5896-4f23-a101-a319cc76ebbe responded 200 in 313.0264 ms] [PID => 91317] 
+[2025-08-06 22:26:03 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/97841db2-5896-4f23-a101-a319cc76ebbe responded 200 in 360.1468 ms] [PID => 91317] 
+[2025-08-06 22:26:03 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData/disks responded 200 in 67.2251 ms] [PID => 91317] 
+[2025-08-06 22:26:03 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 71.3942 ms] [PID => 91317] 
+[2025-08-06 22:29:32 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults/97841db2-5896-4f23-a101-a319cc76ebbe responded 200 in 111.9694 ms] [PID => 91317] 
+[2025-08-06 22:29:32 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor/97841db2-5896-4f23-a101-a319cc76ebbe responded 200 in 112.0200 ms] [PID => 91317] 
+[2025-08-06 22:29:32 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 52.3773 ms] [PID => 91317] 
+[2025-08-06 22:29:32 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData/disks responded 200 in 52.3043 ms] [PID => 91317] 
+[2025-08-06 22:29:33 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 351.7902 ms] [PID => 91317] 
+[2025-08-06 22:31:32 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/Plugins responded 200 in 73.5936 ms] [PID => 91317] 
+[2025-08-06 22:34:33 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 71.0112 ms] [PID => 91317] 
+[2025-08-06 22:39:33 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 258.1080 ms] [PID => 91317] 
+[2025-08-06 22:44:34 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 356.4522 ms] [PID => 91317] 
+[2025-08-06 22:49:35 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/SystemData responded 200 in 336.1593 ms] [PID => 91317] 
+[2025-08-06 22:52:07 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 216.2325 ms] [PID => 91317] 
+[2025-08-06 22:54:52 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 356.0691 ms] [PID => 91317] 
+[2025-08-06 22:56:31 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults responded 200 in 337.7490 ms] [PID => 91317] 
+[2025-08-06 23:09:28 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults responded 200 in 485.6630 ms] [PID => 91317] 
+[2025-08-06 23:10:22 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults responded 200 in 62.9823 ms] [PID => 91317] 
+[2025-08-06 23:10:22 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 404.9730 ms] [PID => 91317] 
+[2025-08-06 23:12:10 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults responded 200 in 168.8743 ms] [PID => 91317] 
+[2025-08-06 23:12:10 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 231.0726 ms] [PID => 91317] 
+[2025-08-06 23:13:22 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults responded 200 in 67.9479 ms] [PID => 91317] 
+[2025-08-06 23:13:22 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 129.7048 ms] [PID => 91317] 
+[2025-08-06 23:21:31 WRN] [Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware File => (:)] [Message => The WebRootPath was not found: /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/wwwroot. Static files may be unavailable.] [PID => 85572] 
+[2025-08-06 23:21:40 WRN] [Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware File => (:)] [Message => Failed to determine the https port for redirect.] [PID => 85572] 
+[2025-08-06 23:21:40 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults responded 200 in 276.1287 ms] [PID => 85572] 
+[2025-08-06 23:24:21 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults responded 200 in 220.8687 ms] [PID => 85572] 
+[2025-08-06 23:24:22 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 707.8544 ms] [PID => 85572] 
+[2025-08-06 23:24:24 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/MonitorResults responded 200 in 89.7790 ms] [PID => 85572] 
+[2025-08-06 23:24:24 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 503.5225 ms] [PID => 85572] 

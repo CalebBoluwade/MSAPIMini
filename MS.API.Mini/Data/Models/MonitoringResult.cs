@@ -1,5 +1,12 @@
 namespace MS.API.Mini.Data.Models;
 
+public record TrackerRecordDTO
+{
+    [JsonPropertyName("ServiceName")] public string ServiceName {  get; set; }
+    [JsonPropertyName("IPAddress")] public string IPAddress {  get; set; }
+    [JsonPropertyName("CurrentHealthCheck")] public MonitoringStatus CurrentHealthCheck {  get; set; }
+}
+
 // Main monitoring result entity
 public class MonitoringResultHistory
 {

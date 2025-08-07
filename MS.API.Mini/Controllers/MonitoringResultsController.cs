@@ -8,6 +8,23 @@ namespace MS.API.Mini.Controllers;
 public class MonitorResultsController(MonitorDBContext _dbCtx, ILogger<MonitorResultsController> logger) : ControllerBaseExtension
 {
     [MapToApiVersion(1)]
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var results = await _dbCtx.MonitoringResultHistory
+            .Include(r => r.Service)
+            .Select(x => new TrackerRecordDTO
+            {
+                ServiceName = x.Service.ServiceName,
+                IPAddress = x.Service.IPAddress,
+                CurrentHealthCheck = x.Status
+            }).GroupBy(x => x.ServiceName)
+            .ToListAsync();
+        
+        return Ok(results);
+    }
+    
+    [MapToApiVersion(1)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetResult(Guid id, [FromQuery] long StartDate, [FromQuery] long EndDate)
     {

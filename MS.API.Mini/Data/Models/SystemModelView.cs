@@ -1,4 +1,4 @@
-using MS.API.Mini.Models;
+
 
 namespace MS.API.Mini.Data.Models;
 
@@ -16,7 +16,6 @@ public abstract class SystemMonitorBase
     [JsonPropertyName("Device")]
     public string Device { get; set; } = string.Empty;
     public int FailureCount { get; set; }
-    public int RetryCount { get; set; }
     public string Configuration { get; set; } = "{}";
     public string CheckInterval { get; set; } = "*/15 * * * *";
     public bool IsAcknowledged { get; set; }
@@ -68,11 +67,66 @@ public class SystemMonitor : SystemMonitorBase
     [JsonPropertyName("LastServiceUptime")]
     public DateTime LastServiceUpTime { get; set; }
     
+    [JsonPropertyName("PollerNode")] public Guid PollerNode { get; set; }
+    
+    [JsonPropertyName("Agent")] public string Agent { get; set; } = string.Empty;
+    
     [JsonPropertyName("CurrentHealthCheck")]
-    public MonitoringStatus CurrentHealthCheck { get; set; } = MonitoringStatus.UnknownStatus;
+    public MonitoringStatus? CurrentHealthCheck { get; set; } = MonitoringStatus.UnknownStatus;
 
     [JsonPropertyName("CreatedAt")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     // Navigation properties
     public virtual ICollection<MonitoringResultHistory> MonitoringResults { get; set; } = new List<MonitoringResultHistory>();
+    
+    public virtual ICollection<SystemMetric> MonitorMetrics { get; set; } = new List<SystemMetric>();
+}
+
+public record OverviewMetric
+{
+    public long? Timestamp { get; set; }
+    public double Metric { get; set; }
+}
+
+public class SystemMonitorDTO
+{
+    [Key, JsonPropertyName("SystemMonitorId")]
+    public new Guid SystemMonitorId { get; set; }
+    
+    [JsonPropertyName("IPAddress")] public string IPAddress { get; set; } = string.Empty;
+
+    [JsonPropertyName("ServiceName")]
+    public string ServiceName { get; set; } = string.Empty;
+
+    [Required, JsonPropertyName("Description")]
+    public string Description { get; set; } = string.Empty;
+
+    [Required, JsonPropertyName("Plugins")]
+    public List<string> Plugins { get; set; } = [];
+    
+    [NotMapped, JsonPropertyName("PluginDetails")]
+    public List<MonitorPlugin> PluginDetails { get; set; } = [];
+    
+    [JsonPropertyName("Device")] public string Device { get; set; } = string.Empty;
+    
+    [JsonPropertyName("CurrentHealthCheck")] public MonitoringStatus? CurrentHealthCheck { get; set; } = MonitoringStatus.UnknownStatus;
+    
+    public string Configuration { get; set; } = "{}";
+    public string CheckInterval { get; set; } = "*/15 * * * *";
+    
+    [JsonPropertyName("IsAcknowledged")] public bool IsAcknowledged { get; set; }
+    
+    [JsonPropertyName("IsMonitored")] public bool IsMonitored { get; set; } = true;
+    
+    [JsonPropertyName("CreatedAt")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    [JsonPropertyName("Metrics")]
+    public ICollection<OverviewMetric> MonitorMetrics { get; set; } = new List<OverviewMetric>();
+}
+
+public class AvailablePoller
+{
+    [Key, JsonPropertyName("PollerId")] public string Id { get; set; } = string.Empty;
+    
+    [JsonPropertyName("IPAddress")] public string IPAddress { get; set; } = string.Empty;
 }

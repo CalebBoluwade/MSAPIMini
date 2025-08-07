@@ -1,6 +1,9 @@
+using System.Net.Http.Headers;
 using Asp.Versioning;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MS.API.Mini.Configuration;
+using MS.API.Mini.Contracts;
 using MS.API.Mini.Data;
 using MS.API.Mini.Data.Models;
 using MS.API.Mini.Data.Models.Validations;
@@ -10,6 +13,8 @@ using MS.API.Mini.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.UseUrls("http://0.0.0.0:7104");
 
 builder.Host.UseSerilog((_, _, lc) => lc.ReadFrom.Configuration(new ConfigurationBuilder()
     .AddJsonFile("Serilog.json")
@@ -22,6 +27,31 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 builder.Services.AddDbContext<MonitorDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.Configure<AgentConfiguration>(builder.Configuration.GetSection(nameof(AgentConfiguration)));
+
+builder.Services.AddOptions<AgentConfiguration>()
+    .Bind(builder.Configuration.GetSection("AgentConfiguration"))
+    .ValidateDataAnnotations()
+    .Validate(config => !string.IsNullOrEmpty(config.GitToken))
+    .Validate(config => config.LicenseOptions is { Count: > 0 })
+    .ValidateOnStart();
+
+builder.Services.AddScoped<IAnsibleDeploymentService, AnsibleDeploymentService>();
+builder.Services.AddHttpClient<GitHubService>(x =>
+{
+    // Configure HttpClient for GitHub API
+    x.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+    x.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("MS", "1.0"));
+
+    // Add GitHub token if available
+    var githubToken = builder.Configuration["Git:Token"];
+    if (string.IsNullOrEmpty(githubToken)) throw new ArgumentException("GitHub token is missing");
+    if (!string.IsNullOrEmpty(githubToken))
+    {
+        x.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", githubToken);
+    }
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -67,6 +97,8 @@ builder.Services.AddScoped<IValidator<SystemMonitor>, SystemMonitorDTOValidator>
 // );
 
 builder.Services.AddScoped<IActiveDirectoryService, ActiveDirectoryService>();
+builder.Services.AddScoped<IAgentContract, AgentContractor>();
+builder.Services.AddScoped<IDBContract, DBContractor>();
 
 // Add Microsoft Graph
 builder.Services.AddMicrosoftGraph(builder.Configuration);

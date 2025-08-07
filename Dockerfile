@@ -17,6 +17,9 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./MS.API.Mini.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+ENV ASPNETCORE_URLS=http://+:7104
+ENV DOTNET_ENVIRONMENT=Production
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

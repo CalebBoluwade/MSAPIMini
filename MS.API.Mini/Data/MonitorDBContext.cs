@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MS.API.Mini.Data.Models;
 using MS.API.Mini.Models;
 
@@ -9,7 +8,6 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
 {
     public DbSet<SystemMonitor> SystemMonitors { get; set; }
     public DbSet<MonitorPlugin> MonitorPlugins { get; set; }
-    
     public DbSet<MonitoringResultHistory> MonitoringResultHistory { get; set; }
     public DbSet<PluginMonitoringResult> PluginResults { get; set; }
     
@@ -19,7 +17,9 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
     
     public DbSet<DiskData> SystemDiskData { get; set; }
         
-    public DbSet<Agents> Agents { get; set; }
+    public DbSet<Agent> Agents { get; set; }
+    
+    public DbSet<AvailablePoller> AvailablePollers { get; set; }
     
     public DbSet<NotificationGroup> NotificationGroups { get; set; }
     public DbSet<NotificationPlatforms> NotificationPlatforms { get; set; }
@@ -30,13 +30,6 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<SystemMonitor>()
-            .Property(a => a.CurrentHealthCheck)
-            .HasDefaultValue(MonitoringStatus.UnknownStatus)
-            .HasConversion(
-                v => v.ToString(),
-                v => (MonitoringStatus)Enum.Parse(typeof(MonitoringStatus), v));
         
         modelBuilder.Entity<MonitorPlugin>(entity =>
         {
@@ -58,13 +51,10 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
         {
             entity.HasIndex(e => e.ServiceName).IsUnique();
             
-            entity.Property(e => e.SystemMonitorId).HasDefaultValueSql("uuid_generate_v4()");
+            entity.HasIndex(e => new { e.IPAddress, e.Port }).IsUnique();
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-            entity.Property(e => e.RetryCount)
-                .HasDefaultValueSql("3");
 
             entity.Property(e => e.Configuration)
                 .HasDefaultValueSql("'{}'");
@@ -73,7 +63,11 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
                 .HasDefaultValue(MonitoringStatus.UnknownStatus)
                 .HasConversion(
                     v => v.ToString(),
-                    v => (MonitoringStatus)Enum.Parse(typeof(MonitoringStatus), v));
+                    v => (MonitoringStatus)Enum.Parse(typeof(MonitoringStatus), v ?? "UnknownStatus"))
+                .HasDefaultValue(MonitoringStatus.UnknownStatus)
+                .IsRequired();
+            
+            entity.Property(e => e.CurrentHealthCheck).ValueGeneratedNever();
 
             entity.Property(e => e.CheckInterval)
                 .HasDefaultValueSql("'*/15 * * * *'");
@@ -82,6 +76,11 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
                 .HasColumnType("text[]")
                 .HasDefaultValueSql("ARRAY[]::text[]");
         });
+        
+        modelBuilder.Entity<SystemMonitor>()
+            .HasMany(s => s.MonitorMetrics)
+            .WithOne(m => m.SystemMonitor)
+            .HasForeignKey(m => m.SystemMonitorId);
         
         modelBuilder.Entity<MonitoringResultHistory>(entity =>
         {
@@ -94,12 +93,16 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
             entity.Property(e => e.Status)
                 .HasConversion(
                     v => v.ToString(),
-                    v => (MonitoringStatus)Enum.Parse(typeof(MonitoringStatus), v));
+                    v => (MonitoringStatus)Enum.Parse(typeof(MonitoringStatus), v ?? "UnknownStatus"))
+                .HasDefaultValue(MonitoringStatus.UnknownStatus)
+                .IsRequired();
             
             entity.Property(e => e.MainStatus)
                 .HasConversion(
                     v => v.ToString(),
-                    v => (MonitoringStatus)Enum.Parse(typeof(MonitoringStatus), v));
+                    v => (MonitoringStatus)Enum.Parse(typeof(MonitoringStatus), v ?? "UnknownStatus"))
+                .HasDefaultValue(MonitoringStatus.UnknownStatus)
+                .IsRequired();
 
             entity.HasMany(e => e.PluginMonitoringResults)
                 .WithOne(p => p.MonitoringResult)
@@ -119,18 +122,66 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
                     v => (MonitoringStatus)Enum.Parse(typeof(MonitoringStatus), v));
         });
         
-        modelBuilder.Entity<Agents>()
-            .HasKey(a => a.AgentID);
-        
-        modelBuilder.Entity<Agents>(entity =>
+        modelBuilder.Entity<Agent>(entity =>
         {
+            entity.HasKey(a => a.AgentID);
+            
+            entity.HasIndex(a => a.AgentID).IsUnique();
+            
+            entity.Property(e => e.AgentHostAddress).IsRequired();
+            
+            entity.HasIndex(ag => new { ag.AgentID, ag.AgentHostAddress })
+            .IsUnique();
+            
+            entity.Property(e => e.IsMonitored)
+                .HasDefaultValue(false);
+            
             entity.Property(e => e.DateAdded)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
+
+        // Configure the primary key for SystemMetric
+        modelBuilder.Entity<SystemMetric>()
+            .HasKey(sm => sm.ID);
+
+        // Configure the primary key for Disk
+        modelBuilder.Entity<DiskData>()
+            .HasKey(d => d.AgentID);
+
+        // Configure the foreign key relationship between SystemMetric and Agent
+        modelBuilder.Entity<SystemMetric>()
+            .HasOne(sm => sm.Agent)
+            .WithMany(a => a.SystemMetrics)
+            .HasForeignKey(sm => sm.AgentID)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure the foreign key relationship between Disk and Agent
+        modelBuilder.Entity<DiskData>()
+            .HasOne(d => d.Agent)
+            .WithMany(a => a.Disks)
+            .HasForeignKey(d => d.AgentID)
+            .OnDelete(DeleteBehavior.Cascade);
         
-        modelBuilder.Entity<Agents>()
-            .HasIndex(ag => new { ag.AgentID, ag.AgentHostAddress })
+        modelBuilder.Entity<DiskData>()
+            .HasIndex(e => new { e.AgentID, e.Drive })
             .IsUnique();
+
+        // Create indexes for faster lookups
+        modelBuilder.Entity<SystemMetric>()
+            .HasIndex(sm => new { sm.AgentID, sm.Timestamp })
+            .HasDatabaseName("IDX_SystemMetrics_Agent");
+
+        modelBuilder.Entity<DiskData>()
+            .HasIndex(d => new { d.AgentID, d.Drive })
+            .HasDatabaseName("IDX_Disks_Agent");
+            
+        modelBuilder.Entity<NetworkDeviceMetric>().HasKey(ndm => new { ndm.SystemMonitorId, ndm.DeviceIP, ndm.MetricName });
+
+        modelBuilder.Entity<AvailablePoller>(entity =>
+        {
+            entity.Property(e => e.IPAddress).IsRequired();
+            entity.HasIndex(e => e.IPAddress).IsUnique();
+        });
 
         modelBuilder.Entity<ServiceNotificationGroup>()
             .HasOne(g => g.Service);

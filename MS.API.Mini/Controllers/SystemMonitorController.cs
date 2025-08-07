@@ -1,21 +1,59 @@
 using System.Text.Json;
 using Asp.Versioning;
+using MS.API.Mini.Configuration;
+using MS.API.Mini.Contracts;
 using MS.API.Mini.Data;
 using MS.API.Mini.Data.Models;
+using MS.API.Mini.Extensions;
+using MS.API.Mini.Services;
 
 namespace MS.API.Mini.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class SystemMonitorController(MonitorDBContext _dbCtx, ILogger<SystemMonitorController> logger) : ControllerBase
+public class SystemMonitorController(MonitorDBContext _dbCtx,
+    IAnsibleDeploymentService _ansibleDeploymentService,
+    IAgentContract agentContractor,
+    GitHubService _githubService,
+    IOptions<AgentConfiguration> _agentConfig,
+    ILogger<SystemMonitorController> logger)
+    : ControllerBaseExtension
 {
+    [MapToApiVersion(1)]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<SystemMonitor>>> GetSystemMonitors()
+    public async Task<ActionResult<IEnumerable<SystemMonitorDTO>>> GetSystemMonitors()
     {
-        var results = await _dbCtx.SystemMonitors.OrderBy(x => x.CreatedAt).ToListAsync();
+        var results = await _dbCtx.SystemMonitors
+            .AsSplitQuery()
+            .OrderBy(x => x.CreatedAt)
+            .Select(m => new SystemMonitorDTO
+            {
+                SystemMonitorId = m.SystemMonitorId,
+                IPAddress = m.IPAddress,
+                ServiceName = m.ServiceName,
+                Description = m.Description,
+                Configuration = m.Configuration,
+                Device = m.Device,
+                Plugins = m.Plugins,
+                CurrentHealthCheck = m.CurrentHealthCheck,
+                CheckInterval = m.CheckInterval,
+                CreatedAt = m.CreatedAt,
+                IsAcknowledged = m.IsAcknowledged,
+                IsMonitored = m.IsMonitored,
+                MonitorMetrics = _dbCtx.SystemMetrics
+                    .Where(metric => metric.SystemMonitorId == m.SystemMonitorId)
+                    .OrderByDescending(metric => metric.Timestamp)
+                    .Take(5)
+                    .Select(metric => new OverviewMetric
+                    {
+                       Timestamp = metric.Timestamp,
+                       Metric = metric.CPUUsage,
+                    })
+                    .ToList()
+            })
+            .ToListAsync();
         return Ok(results);
     }
 
+    [MapToApiVersion(1)]
     [HttpGet("{SystemMonitorId:guid}")]
     public async Task<ActionResult<SystemMonitor>> GetMonitorById(Guid SystemMonitorId)
     {
@@ -48,6 +86,7 @@ public class SystemMonitorController(MonitorDBContext _dbCtx, ILogger<SystemMoni
         }
     }
 
+    [MapToApiVersion(1)]
     [HttpPost]
     public async Task<ActionResult<SystemMonitor>> Create(SystemMonitor input)
     {
@@ -60,7 +99,6 @@ public class SystemMonitorController(MonitorDBContext _dbCtx, ILogger<SystemMoni
             Port = input.Port,
             IsMonitored = true,
             Device = input.Device,
-            RetryCount = input.RetryCount,
             FailureCount = 0,
             Plugins = input.Plugins,
             Configuration = input.Configuration,
@@ -107,6 +145,7 @@ public class SystemMonitorController(MonitorDBContext _dbCtx, ILogger<SystemMoni
         }
     }
 
+    [MapToApiVersion(1)]
     [HttpPut("{SystemMonitorId:guid}")]
     public async Task<IActionResult> Update(Guid SystemMonitorId, SystemMonitor updated)
     {
@@ -123,6 +162,7 @@ public class SystemMonitorController(MonitorDBContext _dbCtx, ILogger<SystemMoni
         return NoContent();
     }
 
+    [MapToApiVersion(1)]
     [HttpDelete("{MonitorId:guid}")]
     public async Task<IActionResult> Delete(Guid MonitorId)
     {
@@ -133,4 +173,33 @@ public class SystemMonitorController(MonitorDBContext _dbCtx, ILogger<SystemMoni
         await _dbCtx.SaveChangesAsync();
         return NoContent();
     }
+    
+    [HttpGet("Agent/Releases")]
+        public async Task<IActionResult> GetAgentReleaseAsync()
+        {
+          var result= await _githubService.GetLatestReleaseAsync(_agentConfig.Value.GitUsername, _agentConfig.Value.GitRepository);
+          
+          return Ok(result);
+        }
+        
+        [HttpPost("Deploy")]
+        // [Authorize]
+        public async Task<IActionResult> InitiateAgentDeployment([FromBody] AgentDeploymentRequest request, CancellationToken cancellationToken)
+        {
+            // logger.LogInformation($"Deployment requested by {User.Identity!.Name} to {request.Environment}");
+            // await agentContractor.CreateNewAgentAsync(request, cancellationToken);
+
+            var agentRemoteConfig = agentContractor.CreateAgentConfiguration(new AgentSettings
+            {
+                AgentVersion = request.AgentVersion,
+                AgentAPIPort = int.Parse(_agentConfig.Value.DefaultPort),
+                APIBaseUrl = _agentConfig.Value.AgentRepositoryPath,
+                AgentID = ""
+            });
+        
+            // Start the deployment process
+            var deployment = await _ansibleDeploymentService.RunAnsiblePlaybookAsync(request, agentRemoteConfig);
+        
+            return Ok(deployment);
+        }
 }

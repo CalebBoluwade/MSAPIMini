@@ -1,4 +1,4 @@
-﻿namespace MS.API.Mini.Models
+﻿namespace MS.API.Mini.Data.Models
 {
     public struct EntityType
     {
@@ -11,6 +11,10 @@
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long ID { get; set; }
+        
+        [ForeignKey(nameof(SystemMonitorId))]
+        public Guid SystemMonitorId { get; set; } // Foreign key
+        
         public long? Timestamp { get; set; }
         public required string AgentID { get; set; }
         public long? TimestampMem { get; set; }
@@ -27,7 +31,8 @@
         public string AgentVersion { get; set; }
         
         // Navigation property
-        public Agents Agent { get; set; }
+        public SystemMonitor SystemMonitor { get; set; } // Navigation property
+        public Agent Agent { get; set; }
     }
 
     [Table("SystemDiskData"), Keyless]
@@ -54,7 +59,7 @@
         [JsonPropertyName("Used"), Column(TypeName = "decimal(18,6)")]
         public decimal? Used { get; set; }
         
-        public virtual Agents Agent { get; set; } = null!;
+        public virtual Agent Agent { get; set; } = null!;
     }
     
     [Table("NetworkDeviceMetricData"), Keyless]
