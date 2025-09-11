@@ -1,5 +1,4 @@
-﻿using Asp.Versioning;
-using MS.API.Mini.Contracts;
+﻿using MS.API.Mini.Contracts;
 using MS.API.Mini.Data;
 using MS.API.Mini.Data.Models;
 using MS.API.Mini.Extensions;
@@ -15,7 +14,7 @@ namespace MS.API.Mini.Controllers
         public async Task<ActionResult<APIResponse<SystemMetric>>> SystemData([FromQuery(Name = "agent")] string AgentID,
             [FromQuery] string Entity, [FromQuery] long startPeriod, [FromQuery] long endPeriod)
         {
-            logger.LogDebug("Start period: {StartPeriod}, end period: {EndPeriod}", startPeriod, endPeriod);
+            logger.LogInformation("Start period: {StartPeriod}, end period: {EndPeriod}", startPeriod, endPeriod);
             var sysMetrics = await dbContractor.GetSystemMetricsAsync(AgentID, Entity, startPeriod, endPeriod);
 
             return Success(sysMetrics, "FBM", null);

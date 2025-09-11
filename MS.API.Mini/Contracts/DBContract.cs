@@ -41,7 +41,11 @@ public class DBContractor(ILogger<DBContractor> logger, MonitorDBContext ctx): I
     public async Task<List<SystemMetric>> GetSystemMetricsAsync(string AgentID, string Entity, long startPeriod, long endPeriod)
     {
         return await ctx.SystemMetrics
-            .Where(x => x.AgentID == AgentID)
+            .Where(x => x.AgentID == AgentID && 
+                        x.Timestamp >= startPeriod && 
+                        x.Timestamp <= endPeriod)
+            .OrderByDescending(x => x.Timestamp)
+            .Take(200)
             .ToListAsync();
     }
 

@@ -9,7 +9,7 @@ namespace MS.API.Mini.Services;
 
 public interface IAnsibleDeploymentService
 {
-    Task<APIResponse<DeploymentStatus>> RunAnsiblePlaybookAsync(AgentDeploymentRequest request,
+    Task<APIResponse<DeploymentStatus?>> RunAnsiblePlaybookAsync(AgentDeploymentRequest request,
         string agentRemoteConfig);
 
     Task<APIResponse<DeploymentStatus>> GetDeploymentStatusAsync(string deploymentId);
@@ -25,7 +25,7 @@ public class AnsibleDeploymentService(
     // Get Ansible repository path from configuration
     private readonly string agentRepoPath = _agentConfig.Value.AgentRepositoryPath;
 
-    public Task<APIResponse<DeploymentStatus>> RunAnsiblePlaybookAsync(AgentDeploymentRequest request,
+    public Task<APIResponse<DeploymentStatus?>> RunAnsiblePlaybookAsync(AgentDeploymentRequest request,
         string agentRemoteConfig)
     {
         try
@@ -33,12 +33,10 @@ public class AnsibleDeploymentService(
             var deploymentId = Guid.NewGuid().ToString();
             if (request.Servers.Length == 0)
             {
-                return Task.FromResult(new APIResponse<DeploymentStatus>
-                {
-                    Message = "Empty Server List",
-                    Data = null,
-                    Cause = ""
-                });
+                return Task.FromResult(APIResponse<DeploymentStatus>.ErrorResult(
+                    ResponseMessage.Error,
+                    ["Empty Server List"]
+                ));
             }
 
             // Create unique directory for this deployment
@@ -51,7 +49,6 @@ public class AnsibleDeploymentService(
                 Id = deploymentId,
                 StartTime = DateTime.Now,
                 Status = "IN_PROGRESS",
-                Environment = request.Environment,
                 Servers = request.Servers
             };
 
@@ -67,13 +64,14 @@ public class AnsibleDeploymentService(
 
                     // Create a temporary inventory file
                     var inventoryPath = Path.Combine(deploymentDir, $"deploy/inventory_{deploymentId}.ini");
-                    _logger.LogInformation("Deploying inventory to {Path}", inventoryPath);
 
                     await File.WriteAllTextAsync(inventoryPath,
                         BuildInventory(request.Servers, request.DeployUser, request.DeployPassword));
 
                     var agentConfigPath = Path.Combine(deploymentDir, "service/src/config/RemoteConfig.yml");
-                    _logger.LogInformation("Deploying Config to {ConfigPath}", agentConfigPath);
+                    
+                    _logger.LogInformation("Deploying inventory to {InventoryPath} //////// Deploying Config to {ConfigPath}", inventoryPath, agentConfigPath);
+                    
                     await File.WriteAllTextAsync(agentConfigPath, agentRemoteConfig);
 
                     // Execute Ansible playbook
@@ -83,7 +81,6 @@ public class AnsibleDeploymentService(
                         FileName = "ansible-playbook",
                         Arguments = $"--timeout 60 -i {inventoryPath} {deploymentDir}/deploy/deploy_agent.yml " +
                                     $"--extra-vars \"agent_version={request.AgentVersion} " +
-                                    $"environment={request.Environment} " +
                                     $"agent_repo_url={agentRepoPath}\"",
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -101,13 +98,13 @@ public class AnsibleDeploymentService(
                     process.Start();
                     
 
-                    process.OutputDataReceived += (sender, args) =>
+                    process.OutputDataReceived += (_, args) =>
                     {
                         if (args.Data == null) return;
                         _logger.LogInformation("Ansible Output ({DeploymentId}): {Data}", deploymentId, args.Data);
                     };
 
-                    process.ErrorDataReceived += (sender, args) =>
+                    process.ErrorDataReceived += (_, args) =>
                     {
                         if (args.Data == null) return;
                         _logger.LogWarning("Ansible error ({DeploymentId}): {Data}", deploymentId, args.Data);
@@ -137,11 +134,11 @@ public class AnsibleDeploymentService(
 
                     _deployments[deploymentId] = status;
 
-                    _logger.LogInformation("Ansible playbook finished >>> {@Status}", status);
 
                     // Clean up the inventory file
                     try
                     {
+                         _logger.LogInformation("Ansible playbook finished >>> {@Status}", status);
                         // File.Delete(inventoryPath);
                     }
                     catch
@@ -164,15 +161,13 @@ public class AnsibleDeploymentService(
                 _deployments.AddOrUpdate(deploymentId,
                     // Add function
                     _ => status,
-                    (_, existingValue) => status);
+                    (_, _) => status);
             });
-
-            return Task.FromResult(new APIResponse<DeploymentStatus>
-            {
-                Message = status.Status,
-                Data = status,
-                Cause = ""
-            });
+            
+            return Task.FromResult(APIResponse<DeploymentStatus>.SuccessResult(
+                status,
+                status.Status
+            ));
         }
         catch (Exception ex)
         {
@@ -182,12 +177,12 @@ public class AnsibleDeploymentService(
             //     stackTrace = ex.StackTrace
             // });
             // _deployments.TryGetValue(deploymentId, out var status);
-            return Task.FromResult(new APIResponse<DeploymentStatus>
-            {
-                Message = ex.Message,
-                Data = null,
-                Cause = ex.ToString()
-            });
+
+           
+            return Task.FromResult(APIResponse<DeploymentStatus>.ErrorResult(
+                ResponseMessage.Error,
+                [ex.ToString()]
+            ));
         }
     }
 
@@ -199,7 +194,7 @@ public class AnsibleDeploymentService(
             BranchName = "dev",
             FetchOptions =
             {
-                CredentialsProvider = (_url, _user, _cred) =>
+                CredentialsProvider = (_, _, _) =>
                     new UsernamePasswordCredentials
                     {
                         Username = _agentConfig.Value.GitUsername,
@@ -214,13 +209,11 @@ public class AnsibleDeploymentService(
     public Task<APIResponse<DeploymentStatus>> GetDeploymentStatusAsync(string deploymentId)
     {
         _deployments.TryGetValue(deploymentId, out var status);
-
-        var response = new APIResponse<DeploymentStatus>
-        {
-            Message = "Deployment status retrieved",
-            Data = status!,
-        };
-        return Task.FromResult(response)!;
+        
+        return Task.FromResult(APIResponse<DeploymentStatus>.SuccessResult(
+            status,
+            "Deployment status retrieved"
+        ));
     }
 
     private static string BuildInventory(IEnumerable<string> servers, string deployUser, string deployPassword)

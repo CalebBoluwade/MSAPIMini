@@ -53,6 +53,9 @@ public class PluginMonitoringResult
     /// </summary>
     [Required]
     public Guid MonitoringResultId { get; set; }
+    
+    [Required]
+    public Guid PluginMetricId { get; set; }
         
     [Required, NotMapped]
     public virtual PluginType PluginType { get; set; }
@@ -60,14 +63,14 @@ public class PluginMonitoringResult
     /// <summary>
     /// The Name of the plugin that generated this result.
     /// </summary>
-    [Required, JsonPropertyName("Name")]
+    [Required, JsonPropertyName("Name"), StringLength(500)]
     public string PluginName { get; set; }
     
-    [Required, JsonPropertyName("Description")]
+    [Required, JsonPropertyName("Description"), StringLength(500)]
     public string PluginDescription { get; set; }
     
-    [Required, JsonPropertyName("Metrics")]
-    public string PluginMetrics { get; set; }
+    // [Required, JsonPropertyName("Metrics")]
+    // public string PluginMetrics { get; set; }
         
     [Required]
     public MonitoringStatus Status { get; set; }
@@ -85,6 +88,9 @@ public class PluginMonitoringResult
     /// </summary>
     [ForeignKey(nameof(MonitoringResultId))]
     public virtual MonitoringResultHistory MonitoringResult { get; set; } = null!;
+    
+    [ForeignKey(nameof(PluginMetricId))]
+    public virtual List<PluginMetric> PluginMetrics { get; set; } = null!;
 }
 
 
@@ -115,6 +121,26 @@ public class PluginResultDTO
     public string Status { get; set; } = string.Empty;
     public string? Output { get; set; }
     
-    public object? PluginMetrics { get; set; }
+    public object PluginMetrics { get; set; }
+    
     public DateTime CheckedAt { get; set; }
+}
+
+public record PluginMetric
+{
+    public string PluginId { get; set; }
+    public string PluginMetricName { get; set; }
+    public string PluginMetricValue { get; set; }
+    public string Unit { get; set; }
+    
+    public Guid PluginResultId { get; set; }
+    public Guid PluginMetricId { get; set; }
+    
+    // Navigation properties
+    /// <summary>
+    /// Navigation property to the parent MonitoringResult.
+    /// This establishes the "one" side of the relationship.
+    /// </summary>
+    [ForeignKey(nameof(PluginResultId))]
+    public virtual PluginMonitoringResult PluginMonitoringResult { get; set; } = null!;
 }

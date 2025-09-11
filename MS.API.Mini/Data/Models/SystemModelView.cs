@@ -16,6 +16,8 @@ public abstract class SystemMonitorBase
     [JsonPropertyName("Device")]
     public string Device { get; set; } = string.Empty;
     public int FailureCount { get; set; }
+    
+    [JsonPropertyName("Configuration")]
     public string Configuration { get; set; } = "{}";
     public string CheckInterval { get; set; } = "*/15 * * * *";
     public bool IsAcknowledged { get; set; }
@@ -111,6 +113,7 @@ public class SystemMonitorDTO
     
     [JsonPropertyName("CurrentHealthCheck")] public MonitoringStatus? CurrentHealthCheck { get; set; } = MonitoringStatus.UnknownStatus;
     
+    [JsonPropertyName("Configuration")]
     public string Configuration { get; set; } = "{}";
     public string CheckInterval { get; set; } = "*/15 * * * *";
     

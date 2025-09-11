@@ -45,6 +45,7 @@ public class GitHubService(HttpClient httpClient, IConfiguration config, ILogger
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
+            logger.LogInformation("Github Http Response Content {Response}", content);
             var release = JsonSerializer.Deserialize<ReleaseInfo>(content, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -62,19 +63,19 @@ public class GitHubService(HttpClient httpClient, IConfiguration config, ILogger
 
 public class ReleaseInfo
 {
-    public string Id { get; set; }
+    public long Id { get; set; }
     public string TagName { get; set; }
     public string Name { get; set; }
     public bool Prerelease { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime PublishedAt { get; set; }
     public string Body { get; set; }
-    public List<ReleaseAsset> Assets { get; set; }
+    public List<ReleaseAsset> Assets { get; set; } = new();
 }
 
 public class ReleaseAsset
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
     public string Name { get; set; }
     public string ContentType { get; set; }
     public long Size { get; set; }

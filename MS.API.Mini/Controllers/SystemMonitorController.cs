@@ -1,19 +1,11 @@
 using System.Text.Json;
-using Asp.Versioning;
-using MS.API.Mini.Configuration;
-using MS.API.Mini.Contracts;
 using MS.API.Mini.Data;
 using MS.API.Mini.Data.Models;
 using MS.API.Mini.Extensions;
-using MS.API.Mini.Services;
 
 namespace MS.API.Mini.Controllers;
 
 public class SystemMonitorController(MonitorDBContext _dbCtx,
-    IAnsibleDeploymentService _ansibleDeploymentService,
-    IAgentContract agentContractor,
-    GitHubService _githubService,
-    IOptions<AgentConfiguration> _agentConfig,
     ILogger<SystemMonitorController> logger)
     : ControllerBaseExtension
 {
@@ -110,13 +102,13 @@ public class SystemMonitorController(MonitorDBContext _dbCtx,
 
         _dbCtx.SystemMonitors.Add(entity);
         await _dbCtx.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetMonitorById), new { SystemMonitorId = entity.SystemMonitorId }, entity);
+        return CreatedAtAction(nameof(GetMonitorById), new { entity.SystemMonitorId }, entity);
     }
 
     [MapToApiVersion(1)]
-    [HttpPut("Plugin/{SystemMonitorId:guid}")]
+    [HttpPut("PluginConfigEdit/{SystemMonitorId:guid}")]
     public async Task<IActionResult> UpdateServicePluginConfiguration([FromRoute] Guid SystemMonitorId,
-        [FromQuery] string PluginId, [FromBody] object Configuration)
+        [FromBody] object Configuration)
     {
         var monitor = await _dbCtx.SystemMonitors
             .AsNoTracking()
@@ -125,7 +117,7 @@ public class SystemMonitorController(MonitorDBContext _dbCtx,
         if (monitor == null)
             return NotFound();
 
-        if (monitor.Plugins.Count == 0) return Ok(monitor);
+        if (monitor.Plugins.Count == 0) return BadRequest(monitor);
 
         var stringifyConfig = JsonSerializer.Serialize(Configuration);
 
@@ -154,7 +146,11 @@ public class SystemMonitorController(MonitorDBContext _dbCtx,
 
         updated.SystemMonitorId = existing.SystemMonitorId;
         updated.CreatedAt = existing.CreatedAt;
-        updated.Configuration = existing.Configuration;
+        updated.PollerNode = existing.PollerNode;
+        // updated.Configuration = existing.Configuration;
+        updated.Agent = existing.Agent;
+        
+        logger.LogInformation("Updating {@SystemMonitor}", updated);
 
         _dbCtx.Entry(existing).CurrentValues.SetValues(updated);
         await _dbCtx.SaveChangesAsync();
@@ -174,32 +170,4 @@ public class SystemMonitorController(MonitorDBContext _dbCtx,
         return NoContent();
     }
     
-    [HttpGet("Agent/Releases")]
-        public async Task<IActionResult> GetAgentReleaseAsync()
-        {
-          var result= await _githubService.GetLatestReleaseAsync(_agentConfig.Value.GitUsername, _agentConfig.Value.GitRepository);
-          
-          return Ok(result);
-        }
-        
-        [HttpPost("Deploy")]
-        // [Authorize]
-        public async Task<IActionResult> InitiateAgentDeployment([FromBody] AgentDeploymentRequest request, CancellationToken cancellationToken)
-        {
-            // logger.LogInformation($"Deployment requested by {User.Identity!.Name} to {request.Environment}");
-            // await agentContractor.CreateNewAgentAsync(request, cancellationToken);
-
-            var agentRemoteConfig = agentContractor.CreateAgentConfiguration(new AgentSettings
-            {
-                AgentVersion = request.AgentVersion,
-                AgentAPIPort = int.Parse(_agentConfig.Value.DefaultPort),
-                APIBaseUrl = _agentConfig.Value.AgentRepositoryPath,
-                AgentID = ""
-            });
-        
-            // Start the deployment process
-            var deployment = await _ansibleDeploymentService.RunAnsiblePlaybookAsync(request, agentRemoteConfig);
-        
-            return Ok(deployment);
-        }
 }

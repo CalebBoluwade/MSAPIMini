@@ -1,5 +1,4 @@
 using MS.API.Mini.Data.Models;
-using MS.API.Mini.Models;
 
 namespace MS.API.Mini.Data;
 
@@ -18,7 +17,7 @@ public static class DatabaseInitializer
             new()
             {
                 Id = 1,
-                PluginId = "http_check",
+                PluginId = "HTTPMonitor",
                 Name = "HTTP Check",
                 PluginType = PluginType.HealthCheck,
                 Description = "Checks HTTP endpoints for availability",
@@ -28,31 +27,41 @@ public static class DatabaseInitializer
             new()
             {
                 Id = 2,
-                PluginId = "ping_check",
-                Name = "Ping Check",
-                PluginType = PluginType.HealthCheck,
-                Description = "Basic network ping check",
-                CompatibleDeviceTypes = ["Network", "Server"],
-                ComingSoon = false
-            },
-            new()
-            {
-                Id = 3,
-                PluginId = "agent_health",
+                PluginId = "AgentMonitor",
                 Name = "Agent Health",
                 PluginType = PluginType.Agent,
                 Description = "Checks agent service health",
-                CompatibleDeviceTypes = ["AGENT"],
+                CompatibleDeviceTypes = ["Server"],
                 ComingSoon = true
             },
             new()
             {
-                Id = 4,
-                PluginId = "ssl_check",
+                Id = 3,
+                PluginId = "SSLChecker",
                 Name = "SSL Check",
                 PluginType = PluginType.Security,
                 Description = "Validates SSL certificates",
                 CompatibleDeviceTypes = ["Web Modules", "Server"],
+                ComingSoon = false
+            },
+            new()
+            {
+                Id = 4,
+                PluginId = "DatabaseMonitor",
+                Name = "Database Gauge",
+                PluginType = PluginType.HealthCheck,
+                Description = "Specific Database Checks",
+                CompatibleDeviceTypes = ["Database"],
+                ComingSoon = false
+            },
+            new()
+            {
+                Id = 5,
+                PluginId = "NetworkMonitor",
+                Name = "Network Gauge",
+                PluginType = PluginType.HealthCheck,
+                Description = "Specific Network Checks using SNMP Protocol",
+                CompatibleDeviceTypes = ["Network"],
                 ComingSoon = false
             }
         };

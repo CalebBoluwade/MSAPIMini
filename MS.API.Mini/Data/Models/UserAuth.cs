@@ -1,8 +1,19 @@
-namespace MS.API.Mini.Models;
+namespace MS.API.Mini.Data.Models;
 
-public class UserAuth
+/// <summary>
+/// Represents the data required for a login request.
+/// </summary>
+public class UserAuthLoginRequest
 {
-    
+    public required string Username { get; set; }
+    public required string Password { get; set; }
+}
+
+public class UserAuthLoginResponse
+{
+    public bool IsAuthenticated { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public ActiveDirectoryUserDTO? UserData { get; set; }
 }
 
 [Table("Users")]
@@ -15,7 +26,7 @@ public sealed class DBUser
     // [NotMapped]
     public required string FullName
     {
-        // get { return $"{FirstName} {LastName}"; }
+        
         get; set;
     }
 
@@ -27,11 +38,6 @@ public sealed class DBUser
 
     [Required, EmailAddress, MaxLength(75)]
     public required string WorkEmail { get; set; }
-        
-    public ICollection<UserNotificationGroup> UserNotificationGroups { get; set; } = new List<UserNotificationGroup>();
-        
-    // Navigation collection to ServiceNotificationGroups if needed
-    public ICollection<ServiceNotificationGroup> ServiceNotificationGroups { get; set; } = new List<ServiceNotificationGroup>();
 
     [ForeignKey("OrganizationId")]
     public int OrganizationId { get; set; }

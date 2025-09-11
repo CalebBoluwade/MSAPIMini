@@ -1,5 +1,3 @@
-using MS.API.Mini.Models;
-
 namespace MS.API.Mini.Data.Models;
 
 public class AgentSettings

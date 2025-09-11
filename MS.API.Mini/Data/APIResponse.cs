@@ -1,36 +1,35 @@
 ﻿namespace MS.API.Mini.Data
 {
-    public record Response
-    {
-        public bool IsSuccess { get; init; }
-        public bool IsExisting { get; init; }
-        public required string Message { get; init; }
-    }
-    
     public class APIResponse<T>
     {
-        [JsonPropertyName("Message")] public string Message { get; set; } = string.Empty;
+        public string Message { get; set; }
+        public bool Success { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public T Data { get; set; }
 
-        [JsonPropertyName("Data")] public required T Data { get; set; }
+        [JsonPropertyName("Errors"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<string> Errors { get; set; }
 
-        [JsonPropertyName("Cause")] public string Cause { get; set; } = string.Empty;
+        private APIResponse(bool success, string message, T data, List<string>? errors)
+        {
+            Success = success;
+            Message = message;
+            Data = data;
+            Errors = errors!;
+        }
 
-        [JsonPropertyName("MetaData")] 
-        public Metadata? MetaData { get; set; }
+        public static APIResponse<T> SuccessResult(T data, string message = ResponseMessage.Success)
+        {
+            return new APIResponse<T>(true, message, data, null);
+        }
+
+        public static APIResponse<T?> ErrorResult(string message, List<string>? errors = null)
+        {
+            return new APIResponse<T?>(false, message, default, errors ?? []);
+        }
     }
 
-    public record Metadata
-    {
-        // [JsonPropertyName("TotalPages")]
-        public int TotalCount { get; set; }
-        public int TotalPages { get; set; }
-        public bool HasNextPage { get; set; }
-        public bool HasPreviousPage { get; set; }
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
-    }
-    
     public class PagedResult<T>
     {
         public List<T> Data { get; set; } = [];
@@ -41,8 +40,8 @@
         public bool HasPrevious => Page > 1;
         public bool HasNext => Page < TotalPages;
     }
-    
-    public struct ResponseMessages
+
+    public struct ResponseMessage
     {
         public const string Success = "Successful";
         public const string ExistingAccount = "Email is already registered.";
@@ -50,5 +49,6 @@
         public const string ExpiredLicense = "License Expired";
         public const string UnrecognizedDomain = "Email domain is not associated with any organization.";
         public const string Error = "Unexpected Error Occured";
+        public const string FailedValidation = "Validation Failed";
     }
 }

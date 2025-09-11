@@ -1,5 +1,4 @@
 using System.Net.Http.Headers;
-using Asp.Versioning;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MS.API.Mini.Configuration;
@@ -11,6 +10,9 @@ using MS.API.Mini.Extensions;
 using MS.API.Mini.Middleware;
 using MS.API.Mini.Services;
 using Serilog;
+
+using Microsoft.AspNetCore.Diagnostics.HealthChecks; 
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +26,25 @@ builder.Host.UseSerilog((_, _, lc) => lc.ReadFrom.Configuration(new Configuratio
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        // Handle circular references
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        
+        // Set max depth to prevent deep nesting issues
+        options.JsonSerializerOptions.MaxDepth = 64;
+        
+        // Use camelCase for JSON property names
+        // options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        
+        // Handle null values appropriately
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
-builder.Services.AddDbContext<MonitorDBContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddDbContextFactory<MonitorDBContext>(options =>
+    {
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    });
+
+builder.Services.Configure<LdapConfig>(builder.Configuration.GetSection("Ldap"));
 builder.Services.Configure<AgentConfiguration>(builder.Configuration.GetSection(nameof(AgentConfiguration)));
 
 builder.Services.AddOptions<AgentConfiguration>()
@@ -45,7 +62,7 @@ builder.Services.AddHttpClient<GitHubService>(x =>
     x.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("MS", "1.0"));
 
     // Add GitHub token if available
-    var githubToken = builder.Configuration["Git:Token"];
+    var githubToken = builder.Configuration["AgentConfiguration:GitToken"];
     if (string.IsNullOrEmpty(githubToken)) throw new ArgumentException("GitHub token is missing");
     if (!string.IsNullOrEmpty(githubToken))
     {
@@ -88,6 +105,11 @@ builder.Services.AddProblemDetails();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddScoped<IValidator<SystemMonitor>, SystemMonitorDTOValidator>();
+builder.Services.AddScoped<IValidator<CreateRuleRequest>, CreateRuleRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateRuleRequest>, UpdateRuleRequestValidator>();
+builder.Services.AddScoped<IRuleValidationService, RuleValidationService>();
+builder.Services.AddScoped<IRuleService, RuleService>();
+
 
 // builder.Services.Scan(scan => scan
 //     .fromAssemblyOf<Program>()
@@ -102,6 +124,10 @@ builder.Services.AddScoped<IDBContract, DBContractor>();
 
 // Add Microsoft Graph
 builder.Services.AddMicrosoftGraph(builder.Configuration);
+
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddCheck("BasicHealthCheck", () => HealthCheckResult.Healthy("Application is running"));
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -136,6 +162,29 @@ app.UseCors("*");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+// Map health check endpoints
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var response = new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(x => new
+            {
+                name = x.Key,
+                status = x.Value.Status.ToString(),
+                description = x.Value.Description,
+                duration = x.Value.Duration.TotalMilliseconds
+            }),
+            totalDuration = report.TotalDuration.TotalMilliseconds
+        };
+        
+        await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+    }
+});
 
 app.MapControllers();
 
