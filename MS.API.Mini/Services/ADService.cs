@@ -1,4 +1,6 @@
+using MS.API.Mini.Data;
 using MS.API.Mini.Data.Models;
+using MS.API.Mini.Extensions;
 using Novell.Directory.Ldap;
 
 namespace MS.API.Mini.Services;
@@ -29,15 +31,17 @@ public interface IActiveDirectoryService
     Task<UserAuthLoginResponse> AuthenticateUserAsync(string username, string password);
 
     Task<List<ActiveDirectoryUserMiniDTO>> GetActiveDirectoryUsersAsync(
-        int? page, int? pageSize, string? searchTerm, bool includeDisabled);
-    
-    Task<List<ActiveDirectoryUserMiniDTO>> GetUsersByPrincipalNamesAsync(List<string> userPrincipalNames);
-    
-    Task<List<ActiveDirectoryUserMiniDTO>> GetUsersByIdsAsync(List<long> userIds);
+        int page, int pageSize, string? searchTerm, bool includeDisabled);
+
+    Task<List<ActiveDirectoryUserMiniDTO>> GetAllActiveDirectoryUsersAsync(
+        int page, int pageSize, bool includeDisabled);
+
+    Task<List<ActiveDirectoryUserMiniDTO>> GetUsersByRuleIdAsync(Guid ruleId);
 }
 
 public class ActiveDirectoryService(
     IOptions<LdapConfig> config,
+    MonitorDBContext dbCtx,
     ILogger<ActiveDirectoryService> logger)
     : IActiveDirectoryService
 {
@@ -75,16 +79,17 @@ public class ActiveDirectoryService(
             }
 
             // The User Principal Name (UPN) is often used for binding in AD environments.
-            var userPrincipalName = $"{username}@{config.Value.DomainName}";
+            var userPrincipalName = username.Contains('@') ? username : $"{username}@{config.Value.DomainName}";
 
             logger.LogInformation("Attempting to bind user: {UserPrincipalName}", userPrincipalName);
             // Attempt to bind (authenticate) with user credentials
             // Bind to the directory with the user's credentials.
             // If the bind is successful, the credentials are valid.
-            await Task.Run(() => connection.Bind(userPrincipalName, password));
-            
+            await Task.Run(() => connection.Bind(LdapConnection.LdapV3, userPrincipalName, password));
+
             var user = await GetUserDetailsAsync(connection, userPrincipalName);
-            logger.LogInformation("User '{UserPrincipalName}' authenticated successfully with Details {@User}.", userPrincipalName, user);
+            logger.LogInformation("User '{UserPrincipalName}' authenticated successfully with Details {@User}.",
+                userPrincipalName, user);
 
             return new UserAuthLoginResponse
             {
@@ -121,9 +126,9 @@ public class ActiveDirectoryService(
             };
         }
     }
-
-    public async Task<List<ActiveDirectoryUserMiniDTO>> GetActiveDirectoryUsersAsync(
-        int? page, int? pageSize, string? searchTerm, bool includeDisabled)
+    
+    public async Task<List<ActiveDirectoryUserMiniDTO>> GetAllActiveDirectoryUsersAsync(
+        int page, int pageSize, bool includeDisabled)
     {
         var allUsers = new List<ActiveDirectoryUserMiniDTO>();
 
@@ -140,13 +145,13 @@ public class ActiveDirectoryService(
                 connection.StartTls();
             }
 
-            logger.LogInformation("Attempting to bind user: {AdminDN} + {AdminPass}", config.Value.BindDn, config.Value.BindPassword);
-            
+            logger.LogInformation("Attempting to bind user: {AdminDN}", config.Value.BindDn);
+
             await Task.Run(() =>
-                connection.Bind(config.Value.BindDn, config.Value.BindPassword));
+                connection.Bind(LdapConnection.LdapV3, config.Value.BindDn, config.Value.BindPassword));
 
             // Search for all user objects
-            const string filter = "(&(objectClass=user)(objectCategory=person))";
+            const string filter = $"(&(objectClass=user)(objectCategory=person))";
             string[] attributes =
             [
                 "id", "sAMAccountName", "displayName", "mail", "givenName", "sn",
@@ -156,14 +161,15 @@ public class ActiveDirectoryService(
             // "officeLocation", "companyName", "manager", "signInActivity"
 
             var searchResults = await Task.Run(() =>
-                connection.Search(config.Value.BindDn, LdapConnection.ScopeSub, filter, attributes, false));
+                connection.Search(config.Value.SearchBase, LdapConnection.ScopeSub, filter, attributes, false));
 
             while (searchResults.HasMore())
             {
                 try
                 {
                     var entry = searchResults.Next();
-                    var user = MapLDAPEntryMiniToUser(entry);
+                    var user = await MapLDAPEntryMiniToUser(entry);
+
                     allUsers.Add(user);
                 }
                 catch (LdapException ex)
@@ -173,21 +179,106 @@ public class ActiveDirectoryService(
             }
         }
         catch (Exception ex)
-        { 
+        {
             logger.LogError(ex, "Error retrieving users from LDAP");
         }
 
         return allUsers;
     }
 
-    public async Task<List<ActiveDirectoryUserMiniDTO>> GetUsersByPrincipalNamesAsync(List<string> userPrincipalNames)
+    public async Task<List<ActiveDirectoryUserMiniDTO>> GetActiveDirectoryUsersAsync(
+        int page, int pageSize, string? searchTerm, bool includeDisabled)
     {
-        var users = new List<ActiveDirectoryUserMiniDTO>();
-        
-        if (!userPrincipalNames.Any()) return users;
+        var allUsers = new List<ActiveDirectoryUserMiniDTO>();
 
         try
         {
+            using var connection = new LdapConnection();
+            connection.Constraints.TimeLimit = config.Value.TimeoutSeconds * 1000;
+
+            // Connect and bind with admin credentials
+            await Task.Run(() => connection.Connect(config.Value.Server, config.Value.Port));
+
+            if (config.Value.UseSSL)
+            {
+                connection.StartTls();
+            }
+
+            logger.LogInformation("Attempting to bind user: {AdminDN}", config.Value.BindDn);
+
+            await Task.Run(() =>
+                connection.Bind(LdapConnection.LdapV3, config.Value.BindDn, config.Value.BindPassword));
+
+            var dbUsers = await dbCtx.Users
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (dbUsers.Count == 0) return allUsers;
+
+            logger.LogInformation("FA {@Users} \n", dbUsers);
+
+            var userFilters = dbUsers.Select(user => $"(userPrincipalName={user.WorkEmail})");
+
+            // Search for all user objects
+            var filter = $"(&(objectClass=user)(objectCategory=person)(|{string.Join("", userFilters)}))";
+            string[] attributes =
+            [
+                "id", "sAMAccountName", "displayName", "mail", "givenName", "sn",
+                "department", "title", "telephoneNumber", "distinguishedName", "memberOf"
+            ];
+            // "accountEnabled", "jobTitle", "mobilePhone", "businessPhones", "userPrincipalName"
+            // "officeLocation", "companyName", "manager", "signInActivity"
+
+            var searchResults = await Task.Run(() =>
+                connection.Search(config.Value.SearchBase, LdapConnection.ScopeSub, filter, attributes, false));
+
+            while (searchResults.HasMore())
+            {
+                try
+                {
+                    var entry = searchResults.Next();
+                    var user = await MapLDAPEntryMiniToUser(entry);
+
+                    allUsers.Add(user);
+                }
+                catch (LdapException ex)
+                {
+                    logger.LogWarning(ex, "Error processing LDAP entry");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error retrieving users from LDAP");
+        }
+
+        return allUsers;
+    }
+
+    public async Task<List<ActiveDirectoryUserMiniDTO>> GetUsersByRuleIdAsync(Guid ruleId)
+    {
+        var users = new List<ActiveDirectoryUserMiniDTO>();
+
+        try
+        {
+            var recipientUserIds = await dbCtx.MonitoringRules
+                .Where(r => r.Id == ruleId)
+                .Select(r => r.RecipientUserIds)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            if (recipientUserIds == null || recipientUserIds.Length == 0) return users;
+
+            var workEmails = await dbCtx.Users
+                .Where(u => recipientUserIds.Contains(u.UserId.ToString()))
+                .Select(u => u.WorkEmail)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (workEmails.Count == 0) return users;
+
             using var connection = new LdapConnection();
             connection.Constraints.TimeLimit = config.Value.TimeoutSeconds * 1000;
 
@@ -198,12 +289,12 @@ public class ActiveDirectoryService(
                 connection.StartTls();
             }
 
-            await Task.Run(() => connection.Bind(config.Value.BindDn, config.Value.BindPassword));
+            await Task.Run(() =>
+                connection.Bind(LdapConnection.LdapV3, config.Value.BindDn, config.Value.BindPassword));
 
-            // Build filter for multiple userPrincipalNames
-            var userFilters = userPrincipalNames.Select(upn => $"(userPrincipalName={upn})");
-            var filter = $"(&(objectClass=user)(|{string.Join("", userFilters)}))";
-            
+            var userFilters = workEmails.Select(email => $"(userPrincipalName={email})");
+            var filter = $"(&(objectCategory=user)(|{string.Join("", userFilters)}))";
+
             string[] attributes = ["sAMAccountName", "displayName", "mail", "title", "telephoneNumber", "memberOf"];
 
             var searchResults = await Task.Run(() =>
@@ -214,8 +305,8 @@ public class ActiveDirectoryService(
                 try
                 {
                     var entry = searchResults.Next();
-                    var user = MapLDAPEntryMiniToUser(entry);
-                    users.Add(user);
+                    var user = await MapLDAPEntryMiniToUser(entry);
+                    if (user != null) users.Add(user);
                 }
                 catch (LdapException ex)
                 {
@@ -225,27 +316,7 @@ public class ActiveDirectoryService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error retrieving users by principal names from LDAP");
-        }
-
-        return users;
-    }
-
-    public async Task<List<ActiveDirectoryUserMiniDTO>> GetUsersByIdsAsync(List<long> userIds)
-    {
-        var users = new List<ActiveDirectoryUserMiniDTO>();
-        
-        if (!userIds.Any()) return users;
-
-        try
-        {
-            // Get users from database first, then map to AD info if needed
-            // For now, return empty list as this would require database integration
-            // This method should query the Users table and return user info
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error retrieving users by IDs");
+            logger.LogError(ex, "Error retrieving users by rule ID: {RuleId}", ruleId);
         }
 
         return users;
@@ -259,7 +330,11 @@ public class ActiveDirectoryService(
             logger.LogInformation("Fetching User Info using {Filter}", filter);
             string[] attributes =
             [
-                "sAMAccountName", "displayName", "mail", "thumbnailPhoto", "jpegPhoto", "title", "telephoneNumber", "memberOf"
+                "sAMAccountName", "displayName", "mail", "thumbnailPhoto", "jpegPhoto", "title", "telephoneNumber",
+                "memberOf", "dn", "distinguishedName", "extensionAttribute8",
+                "extensionAttribute12",
+                "extensionAttribute2",
+                "extensionAttribute10",
             ];
 
             var searchResults = await Task.Run(() =>
@@ -275,23 +350,25 @@ public class ActiveDirectoryService(
             return null;
         }
     }
-        
-    private static ActiveDirectoryUserMiniDTO MapLDAPEntryMiniToUser(LdapEntry userEntry)
+
+    private async Task<ActiveDirectoryUserMiniDTO?> MapLDAPEntryMiniToUser(LdapEntry userEntry)
     {
+        var dbUser = await dbCtx.Users.FirstOrDefaultAsync(u => u.WorkEmail == GetAttributeValue(userEntry, "mail"));
+        if (dbUser == null)
+        {
+            logger.LogWarning("User not found in database: {User}", GetAttributeValue(userEntry, "mail"));
+            return null;
+        }
+
         var userDTO = new ActiveDirectoryUserMiniDTO
         {
+            Id = dbUser.UserId,
             Avatar = GetUserPhotoBase64(userEntry),
-            Username = GetAttributeValue(userEntry, "sAMAccountName"),
-            DisplayName = GetAttributeValue(userEntry, "displayName"),
+            FullName = GetAttributeValue(userEntry, "displayName"),
             EmailAddress = GetAttributeValue(userEntry, "mail"),
             Title = GetAttributeValue(userEntry, "title"),
-            Phone = GetAttributeValue(userEntry, "telephoneNumber"),
+            PhoneNumber = GetAttributeValue(userEntry, "telephoneNumber").SanitizePhoneNumber(),
         };
-
-        var memberOfAttribute = userEntry.GetAttribute("memberOf");
-        if (memberOfAttribute == null) return userDTO;
-        var groups = memberOfAttribute.StringValueArray;
-        userDTO.Groups = groups?.Select(ExtractGroupName).Where(g => !string.IsNullOrEmpty(g)).ToList() ?? [];
 
         return userDTO;
     }
@@ -302,15 +379,15 @@ public class ActiveDirectoryService(
         {
             // Id = user.Id ?? string.Empty,
             Avatar = GetUserPhotoBase64(userEntry),
-            UserPrincipalName = GetAttributeValue(userEntry, "userPrincipalName"),
+            UserPrincipalName = GetAttributeValue(userEntry, "distinguishedName"),
             Username = GetAttributeValue(userEntry, "sAMAccountName"),
-            DisplayName = GetAttributeValue(userEntry, "displayName"),
+            FullName = GetAttributeValue(userEntry, "displayName"),
             EmailAddress = GetAttributeValue(userEntry, "mail"),
             FirstName = GetAttributeValue(userEntry, "givenName"),
             LastName = GetAttributeValue(userEntry, "sn"),
             Department = GetAttributeValue(userEntry, "department"),
             Title = GetAttributeValue(userEntry, "title"),
-            Phone = GetAttributeValue(userEntry, "telephoneNumber"),
+            PhoneNumber = GetAttributeValue(userEntry, "telephoneNumber").SanitizePhoneNumber(),
             Manager = GetAttributeValue(userEntry, "manager")
         };
 
@@ -352,11 +429,6 @@ public class ActiveDirectoryService(
     private static string GetUserPhotoBase64(LdapEntry entry)
     {
         var attributes = entry.GetAttributeSet();
-        
-        foreach (var attr in attributes)
-        {
-            Console.WriteLine(attr.Name);
-        }
 
         // Check for thumbnailPhoto
         if (attributes.ContainsKey("thumbnailPhoto"))
@@ -371,6 +443,5 @@ public class ActiveDirectoryService(
         if (!attributes.ContainsKey("jpegPhoto")) return string.Empty;
         var jpegAttr = entry.GetAttribute("jpegPhoto");
         return jpegAttr is { ByteValue.Length: > 0 } ? Convert.ToBase64String(jpegAttr.ByteValue) : string.Empty;
-
     }
 }

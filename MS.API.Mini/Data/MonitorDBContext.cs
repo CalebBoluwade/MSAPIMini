@@ -26,9 +26,13 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
     
     public DbSet<NotificationPlatforms> NotificationPlatforms { get; set; }
     
+    public DbSet<DBUser> Users { get; set; }
+    
     public DbSet<MonitoringRule> MonitoringRules { get; set; }
 
     public DbSet<RuleConflict> RuleConflicts { get; set; }
+
+    public DbSet<RuleEvaluation> RuleEvaluations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -202,6 +206,11 @@ public class MonitorDBContext(DbContextOptions<MonitorDBContext> options) : DbCo
         {
             entity.Property(e => e.IPAddress).IsRequired();
             entity.HasIndex(e => e.IPAddress).IsUnique();
+        });
+
+        modelBuilder.Entity<RuleEvaluation>(entity =>
+        {
+            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
         });
     }
 }

@@ -1,0 +1,54 @@
+[2025-09-19 09:05:43 WRN] [Microsoft.EntityFrameworkCore.Model File => (:)] [Message => Navigations 'PluginMetric.PluginMonitoringResult' and 'PluginMonitoringResult.PluginMetrics' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.] [PID => 65373] 
+[2025-09-19 09:05:44 WRN] [Microsoft.EntityFrameworkCore.Model File => (:)] [Message => Navigations 'PluginMetric.PluginMonitoringResult' and 'PluginMonitoringResult.PluginMetrics' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.] [PID => 65373] 
+[2025-09-19 09:05:44 WRN] [Microsoft.EntityFrameworkCore.Model File => (:)] [Message => Navigations 'PluginMetric.PluginMonitoringResult' and 'PluginMonitoringResult.PluginMetrics' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.] [PID => 65373] 
+[2025-09-19 09:05:44 WRN] [Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware File => (:)] [Message => The WebRootPath was not found: /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/wwwroot. Static files may be unavailable.] [PID => 65373] 
+[2025-09-19 09:06:11 WRN] [Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware File => (:)] [Message => Failed to determine the https port for redirect.] [PID => 65373] 
+[2025-09-19 09:06:12 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 561.3654 ms] [PID => 65373] 
+[2025-09-19 09:06:16 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 153.0168 ms] [PID => 65373] 
+[2025-09-19 09:06:16 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 196.7137 ms] [PID => 65373] 
+[2025-09-19 09:18:14 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 103.3853 ms] [PID => 65373] 
+[2025-09-19 12:55:07 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 325.0019 ms] [PID => 65373] 
+[2025-09-19 13:20:14 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 126.3622 ms] [PID => 65373] 
+[2025-09-19 14:16:46 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 317.8154 ms] [PID => 65373] 
+[2025-09-19 16:24:52 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 235.4950 ms] [PID => 65373] 
+[2025-09-19 16:26:16 ERR] [MS.API.Mini.Services.ActiveDirectoryService File => (:)] [Message => Error retrieving users from LDAP] [PID => 65373] 
+LdapException: Unable to connect to server vi-rodc-svr.nibss-plc.com:389 (91) Connect Error
+System.Net.Sockets.SocketException (60): Operation timed out
+   at Novell.Directory.Ldap.AsyncExtensions.WaitAndUnwrap(Task task, Int32 timeout)
+   at Novell.Directory.Ldap.Connection.Connect(String host, Int32 port, Int32 semaphoreId)
+[2025-09-19 16:26:16 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/users responded 200 in 75836.9816 ms] [PID => 65373] 
+[2025-09-19 16:42:15 WRN] [Microsoft.EntityFrameworkCore.Model File => (:)] [Message => Navigations 'PluginMetric.PluginMonitoringResult' and 'PluginMonitoringResult.PluginMetrics' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.] [PID => 66603] 
+[2025-09-19 16:42:15 WRN] [Microsoft.EntityFrameworkCore.Model File => (:)] [Message => Navigations 'PluginMetric.PluginMonitoringResult' and 'PluginMonitoringResult.PluginMetrics' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.] [PID => 66603] 
+[2025-09-19 16:42:15 WRN] [Microsoft.EntityFrameworkCore.Model File => (:)] [Message => Navigations 'PluginMetric.PluginMonitoringResult' and 'PluginMonitoringResult.PluginMetrics' were separated into two relationships since the [ForeignKey] attribute was specified on navigations on both sides.] [PID => 66603] 
+[2025-09-19 16:42:16 WRN] [Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware File => (:)] [Message => The WebRootPath was not found: /Users/calebboluwade/Downloads/GROOVY/MS.Deploy/MS.API.Mini/MS.API.Mini/wwwroot. Static files may be unavailable.] [PID => 66603] 
+[2025-09-19 16:42:48 WRN] [Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware File => (:)] [Message => Failed to determine the https port for redirect.] [PID => 66603] 
+[2025-09-19 16:42:49 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 857.8534 ms] [PID => 66603] 
+[2025-09-19 16:44:03 ERR] [MS.API.Mini.Services.ActiveDirectoryService File => (:)] [Message => Error retrieving users from LDAP] [PID => 66603] 
+LdapException: Unable to connect to server vi-rodc-svr.nibss-plc.com:389 (91) Connect Error
+System.Net.Sockets.SocketException (60): Operation timed out
+   at Novell.Directory.Ldap.AsyncExtensions.WaitAndUnwrap(Task task, Int32 timeout)
+   at Novell.Directory.Ldap.Connection.Connect(String host, Int32 port, Int32 semaphoreId)
+[2025-09-19 16:44:03 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/users/all responded 200 in 75306.1277 ms] [PID => 66603] 
+[2025-09-19 16:45:31 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 216.3490 ms] [PID => 66603] 
+[2025-09-19 16:46:46 ERR] [MS.API.Mini.Services.ActiveDirectoryService File => (:)] [Message => Error retrieving users from LDAP] [PID => 66603] 
+LdapException: Unable to connect to server vi-rodc-svr.nibss-plc.com:389 (91) Connect Error
+System.Net.Sockets.SocketException (60): Operation timed out
+   at Novell.Directory.Ldap.AsyncExtensions.WaitAndUnwrap(Task task, Int32 timeout)
+   at Novell.Directory.Ldap.Connection.Connect(String host, Int32 port, Int32 semaphoreId)
+[2025-09-19 16:46:46 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/users/all responded 200 in 75073.0966 ms] [PID => 66603] 
+[2025-09-19 17:00:38 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 178.3060 ms] [PID => 66603] 
+[2025-09-19 17:01:53 ERR] [MS.API.Mini.Services.ActiveDirectoryService File => (:)] [Message => Error retrieving users from LDAP] [PID => 66603] 
+LdapException: Unable to connect to server vi-rodc-svr.nibss-plc.com:389 (91) Connect Error
+System.Net.Sockets.SocketException (60): Operation timed out
+   at Novell.Directory.Ldap.AsyncExtensions.WaitAndUnwrap(Task task, Int32 timeout)
+   at Novell.Directory.Ldap.Connection.Connect(String host, Int32 port, Int32 semaphoreId)
+[2025-09-19 17:01:53 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/users/all responded 200 in 75067.1009 ms] [PID => 66603] 
+[2025-09-19 17:13:44 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 293.0062 ms] [PID => 66603] 
+[2025-09-19 17:14:59 ERR] [MS.API.Mini.Services.ActiveDirectoryService File => (:)] [Message => Error retrieving users from LDAP] [PID => 66603] 
+LdapException: Unable to connect to server vi-rodc-svr.nibss-plc.com:389 (91) Connect Error
+System.Net.Sockets.SocketException (60): Operation timed out
+   at Novell.Directory.Ldap.AsyncExtensions.WaitAndUnwrap(Task task, Int32 timeout)
+   at Novell.Directory.Ldap.Connection.Connect(String host, Int32 port, Int32 semaphoreId)
+[2025-09-19 17:14:59 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/users/all responded 200 in 75172.1181 ms] [PID => 66603] 
+[2025-09-19 17:17:27 INF] [Serilog.AspNetCore.RequestLoggingMiddleware File => (:)] [Message => HTTP GET /api/v1/systemmonitor responded 200 in 231.2471 ms] [PID => 66603] 
+[2025-09-19 18:56:40 WRN] [Microsoft.AspNetCore.Server.Kestrel File => (:)] [Message => As of ""2025-09-19T17:56:02.8345290+00:00"", the heartbeat has been running for ""00:00:03.2357260"" which is longer than ""00:00:01"". This could be caused by thread pool starvation.] [PID => 66603] 

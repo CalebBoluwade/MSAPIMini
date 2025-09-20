@@ -16,9 +16,9 @@ public class NotificationPlatforms
     [Required]
     public string Configuration { get; set; } = string.Empty;
 
-    public bool IsEnabled { get; set; } = false;
+    public bool IsEnabled { get; set; }
 
-    public bool IsDefault { get; set; } = false;
+    public bool IsDefault { get; set; }
 }
 
 public class AlertHistory

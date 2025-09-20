@@ -8,36 +8,61 @@ namespace MS.API.Mini.Controllers;
 public class UsersController(ILogger<UsersController> logger, IActiveDirectoryService activeDirectoryService)
     : ControllerBaseExtension
 {
-    [HttpGet("u")]
-    public async Task<ActionResult<List<ActiveDirectoryUserMiniDTO>>> GetAllUsers()
-    {
-        try
-        {
-            var users = await activeDirectoryService.GetActiveDirectoryUsersAsync(null, null, null, false);
-            logger.LogInformation("Retrieved {UserCount} users from LDAP", users.Count);
-            return Ok(users);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error retrieving all users from LDAP");
-            return StatusCode(500, new { Message = "An error occurred while retrieving users." });
-        }
-    }
-    
-    [HttpGet]
-    public async Task<ActionResult<PagedResult<ActiveDirectoryUserMiniDTO>>> GetUsers(
-        [FromQuery] int page = 1,
+    [HttpGet("all")]
+    public async Task<ActionResult<PagedResult<ActiveDirectoryUserMiniDTO>>> GetAllUsers(
+        [FromQuery] int page = 0,
         [FromQuery] int pageSize = 50,
         [FromQuery] string? searchTerm = null,
         [FromQuery] bool includeDisabled = false)
     {
         try
         {
-            if (page < 1) page = 1;
-            if (pageSize is < 1 or > 999) pageSize = 50; // Graph API max is 999
+            if (page < 0) page = 0;
+            if (pageSize is < 1 or > 999) pageSize = 50;
+
+            var result =
+                await activeDirectoryService.GetAllActiveDirectoryUsersAsync(page, pageSize, includeDisabled);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error fetching AD users");
+            return StatusCode(500, "Internal server error while fetching users");
+        }
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<ActiveDirectoryUserMiniDTO>>> GetUsers(
+        [FromQuery] int page = 0,
+        [FromQuery] int pageSize = 50,
+        [FromQuery] string? searchTerm = null,
+        [FromQuery] bool includeDisabled = false)
+    {
+        try
+        {
+            if (page < 0) page = 0;
+            if (pageSize is < 1 or > 999) pageSize = 50;
 
             var result =
                 await activeDirectoryService.GetActiveDirectoryUsersAsync(page, pageSize, searchTerm, includeDisabled);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error fetching AD users");
+            return StatusCode(500, "Internal server error while fetching users");
+        }
+    }
+    
+    [HttpGet("{ruleId:guid}")]
+    public async Task<ActionResult<PagedResult<ActiveDirectoryUserMiniDTO>>> GetRuleRecipients([Required, FromRoute] Guid ruleId)
+    {
+        try
+        {
+            logger.LogInformation("Retrieving users for rule {RuleId}", ruleId);
+            
+            var result =
+                await activeDirectoryService.GetUsersByRuleIdAsync(ruleId);
             return Ok(result);
         }
         catch (Exception ex)

@@ -11,6 +11,7 @@ public interface IRuleService
     Task<APIResponse<bool>> DeleteRuleAsync(Guid id);
     Task<APIResponse<PagedResult<MonitoringRule>>> GetRulesAsync(RuleQueryParameters parameters);
     Task<APIResponse<MonitoringRule>> GetRuleByIdAsync(Guid id);
+    Task<APIResponse<List<RuleConflict>>> CheckConflictsAsync(CreateRuleRequest request, Guid? existingRuleId = null);
 }
 
 public class RuleService(
@@ -36,10 +37,13 @@ public class RuleService(
                 );
             }
 
+            var serviceId = Guid.TryParse(request.ServiceId, out var parsedServiceId) ? parsedServiceId : Guid.Empty;
+
             var rule = new MonitoringRule
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
+                ServiceId = serviceId,
                 Description = request.Description,
                 MetricName = request.MetricName,
                 Conditions = JsonSerializer.SerializeToDocument(request.Conditions),
@@ -51,7 +55,7 @@ public class RuleService(
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
-                CreatedBy = 1 // TODO: Get actual user ID from claims
+                CreatedBy = Guid.NewGuid() // TODO: Get actual user ID from claims
             };
 
             dbCtx.MonitoringRules.Add(rule);
@@ -207,7 +211,7 @@ public class RuleService(
             
             foreach (var rule in rules.Where(rule => rule.AlertChannels.Count > 0))
             {
-                rule.Recipients = await adService.GetUsersByPrincipalNamesAsync(rule.RecipientUserIds);
+                rule.Recipients = await adService.GetUsersByRuleIdAsync(rule.Id);
             }
 
             var totalPages = totalCount > 0 ? (int)Math.Ceiling((double)totalCount / pageSize) : 0;
@@ -248,6 +252,27 @@ public class RuleService(
         {
             logger.LogError(ex, "Error retrieving rule: {RuleId}", id);
             return APIResponse<MonitoringRule>.ErrorResult("Internal server error");
+        }
+    }
+
+    public async Task<APIResponse<List<RuleConflict>>> CheckConflictsAsync(CreateRuleRequest request, Guid? existingRuleId = null)
+    {
+        try
+        {
+            var tempRule = new MonitoringRule
+            {
+                Id = existingRuleId ?? Guid.NewGuid(),
+                MetricName = request.MetricName,
+                Conditions = JsonSerializer.SerializeToDocument(request.Conditions)
+            };
+
+            var conflicts = await validationService.DetectConflictsAsync(tempRule);
+            return APIResponse<List<RuleConflict>>.SuccessResult(conflicts);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error checking conflicts for rule");
+            return APIResponse<List<RuleConflict>>.ErrorResult("Internal server error");
         }
     }
 }

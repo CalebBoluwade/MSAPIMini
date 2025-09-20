@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Text.Json;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MS.API.Mini.Configuration;
@@ -33,7 +34,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
         options.JsonSerializerOptions.MaxDepth = 64;
         
         // Use camelCase for JSON property names
-        // options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         
         // Handle null values appropriately
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -75,12 +76,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("*",
+    options.AddPolicy("AllowedOrigins",
         api =>
         {
-            api.AllowAnyOrigin()
+            api
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+                .SetIsOriginAllowed(_ => true);
         });
 });
 
@@ -157,7 +160,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("*");
+app.UseCors("AllowedOrigins");
 
 app.UseHttpsRedirection();
 
@@ -190,4 +193,12 @@ app.MapControllers();
 
 app.UseSerilogRequestLogging();
 
-await app.RunAsync();
+try
+{
+    await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Log.Error(ex, "Application terminated unexpectedly");
+    await Log.CloseAndFlushAsync();
+}

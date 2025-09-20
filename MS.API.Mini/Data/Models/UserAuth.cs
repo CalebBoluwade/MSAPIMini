@@ -19,30 +19,22 @@ public class UserAuthLoginResponse
 [Table("Users")]
 public sealed class DBUser
 {
-    public long Id { get; set; }
+    [Key]
+    public Guid UserId { get; set; }
     
     [Required]
     [MaxLength(75)]
     // [NotMapped]
     public required string FullName
     {
-        
         get; set;
     }
-
-    [Required, MaxLength(150), PasswordPropertyText]
-    public string Password { get; set; }
-
-    [MaxLength(15), Phone]
-    public string? PhoneNumber { get; set; }
-
+    
     [Required, EmailAddress, MaxLength(75)]
     public required string WorkEmail { get; set; }
 
     [ForeignKey("OrganizationId")]
-    public int OrganizationId { get; set; }
-
-    public string Role { get; set; } = string.Empty;
+    public Guid OrganizationId { get; set; }
 
     [Required, MaxLength(150), PasswordPropertyText]
     public string MFASecret { get; set; } = string.Empty;

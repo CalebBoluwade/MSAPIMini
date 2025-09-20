@@ -1,11 +1,13 @@
-﻿namespace MS.API.Mini.Data
+using System.Text.Json.Serialization;
+
+namespace MS.API.Mini.Data
 {
     public class APIResponse<T>
     {
         public string Message { get; set; }
         public bool Success { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public T Data { get; set; }
 
         [JsonPropertyName("Errors"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

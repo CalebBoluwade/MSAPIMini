@@ -1,4 +1,3 @@
-using System.Text.Json;
 using FluentValidation;
 
 namespace MS.API.Mini.Data.Models.Validations;
@@ -7,7 +6,6 @@ public class CreateRuleRequestValidator : AbstractValidator<CreateRuleRequest>
 {
     public CreateRuleRequestValidator()
     {
-
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Rule name is required")
             .MaximumLength(100).WithMessage("Rule name cannot exceed 100 characters");
@@ -33,8 +31,7 @@ public class CreateRuleRequestValidator : AbstractValidator<CreateRuleRequest>
 
     private static bool BeValidConditions(RuleConditions? conditions)
     {
-        return conditions != null && 
-               conditions.Threshold > 0 &&
+        return conditions is { Threshold: > 0 } &&
                !string.IsNullOrEmpty(conditions.Operator);
     }
 }
